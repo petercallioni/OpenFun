@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
+using OpenFun.PageModels;
+using OpenFun.Services;
 
 namespace OpenFun
 {
@@ -6,7 +8,7 @@ namespace OpenFun
     {
         public static MauiApp CreateMauiApp()
         {
-            var builder = MauiApp.CreateBuilder();
+            MauiAppBuilder builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
                 .ConfigureFonts(fonts =>
@@ -16,8 +18,10 @@ namespace OpenFun
                 });
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
+            builder.Services.AddSingleton<ModalErrorHandler>();
+            builder.Services.AddSingleton<HomePageModel>();
 
             return builder.Build();
         }
