@@ -10,10 +10,7 @@
                VerticalOptions="Center"
                Grid.Row="0" />
 
-        <CollectionView 
-            ItemsSource="{Binding Games}" 
-            Grid.Row="1"
-            SizeChanged="CollectionView_SizeChanged">
+        <CollectionView ItemsSource="{Binding Games}" Grid.Row="1" SizeChanged="CollectionView_SizeChanged">
             <CollectionView.ItemsLayout>
                 <GridItemsLayout Orientation="Vertical" Span="3" HorizontalItemSpacing="10" VerticalItemSpacing="10" />
             </CollectionView.ItemsLayout>
@@ -22,17 +19,20 @@
                 <DataTemplate>
                     <ContentView>
                         <Border BackgroundColor="LightGray" Padding="10">
-                            <Grid WidthRequest="120" HeightRequest="150" BackgroundColor="Red">
-                                <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SelectCommand}" 
-                                        CommandParameter="{Binding Route}" />
-                                </Grid.GestureRecognizers>
-                                <StackLayout Orientation="Vertical" HorizontalOptions="Center" VerticalOptions="Center">
-                                    <Image Source="{Binding IconName}" WidthRequest="100" HeightRequest="100" />
-                                    <Label Text="{Binding HumanName}" HorizontalOptions="Center" />
-                                </StackLayout>
-                            </Grid>
+                            <!-- Your custom PressableLayout wraps your grid -->
+                            <controls:PressableLayout 
+                                    xmlns:controls="clr-namespace:OpenFun.Controls"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SelectCommand}"
+                                    CommandParameter="{Binding Route}">
+
+                                <Grid WidthRequest="120" HeightRequest="150" BackgroundColor="Red">
+                                    <!-- No need to attach a TapGestureRecognizer here -->
+                                    <StackLayout Orientation="Vertical" HorizontalOptions="Center" VerticalOptions="Center">
+                                        <Image Source="{Binding IconName}" WidthRequest="100" HeightRequest="100" />
+                                        <Label Text="{Binding HumanName}" HorizontalOptions="Center" />
+                                    </StackLayout>
+                                </Grid>
+                            </controls:PressableLayout>
                         </Border>
                     </ContentView>
                 </DataTemplate>
