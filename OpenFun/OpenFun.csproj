@@ -69,6 +69,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Games\Pangram\Pangram.csproj" />
+		<ProjectReference Include="..\OpenFun_Core\OpenFun_Core.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -28,13 +28,26 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Remove="Resources\Raw\licenses.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<MauiAsset Include="Resources\Raw\Dictionaries\en-AU\index.aff" />
 		<MauiAsset Include="Resources\Raw\Dictionaries\en-AU\index.dic" />
+		<MauiAsset Include="Resources\Raw\licenses.txt" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="WeCantSpell.Hunspell" Version="6.0.0" />
 	</ItemGroup>
+
+	<Target Name="GenerateLicenses" AfterTargets="Build" Condition="Exists('$(ProjectDir)obj\project.assets.json')">
+		<PropertyGroup>
+			<LicenseAssetsFile>$(ProjectDir)obj\project.assets.json</LicenseAssetsFile>
+			<LicenseOutputFile>$(ProjectDir)Resources\Raw\licenses.txt</LicenseOutputFile>
+		</PropertyGroup>
+		<Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(ProjectDir)Get-Licenses.ps1&quot; -AssetsFile &quot;$(LicenseAssetsFile)&quot; -OutputFile &quot;$(LicenseOutputFile)&quot;" />
+	</Target>
 
 </Project>
