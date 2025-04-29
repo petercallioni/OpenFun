@@ -19,17 +19,22 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.60" />
+		<MauiAsset Include="Resources\Raw\Dictionaries\en-AU\index.aff" />
+		<MauiAsset Include="Resources\Raw\Dictionaries\en-AU\index.dic" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\OpenFun_Core\OpenFun_Core.csproj" />
+		<MauiAsset Include="Raw\**\*.*" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<MauiXaml Update="Pages\Pangram.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
+		<MauiAsset Include="Resources\Raw\Dictionaries\en-AU\index.aff" />
+		<MauiAsset Include="Resources\Raw\Dictionaries\en-AU\index.dic" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+		<PackageReference Include="WeCantSpell.Hunspell" Version="6.0.0" />
 	</ItemGroup>
 
 </Project>
