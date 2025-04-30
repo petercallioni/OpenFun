@@ -30,8 +30,14 @@ foreach ($lib in $json.libraries.PSObject.Properties.Name) {
     $packageName = $parts[0]
     $packageVersion = $parts[1]
 
+    # Exclude packages from Microsoft, Xamarin, or MAUI.
+    $lowerPackageName = $packageName.ToLower()
+    if ($lowerPackageName -like "microsoft*" -or $lowerPackageName -like "xamarin*" -or $lowerPackageName -like "maui*") {
+        continue
+    }
+    
     # Construct the path to the package folder.
-    $packagePath = Join-Path $globalPackagesPath ($packageName.ToLower())
+    $packagePath = Join-Path $globalPackagesPath ($lowerPackageName)
     $packageVersionPath = Join-Path $packagePath $packageVersion
 
     $licenseText = ""
