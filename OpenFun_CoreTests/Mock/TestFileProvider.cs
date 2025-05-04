@@ -1,6 +1,7 @@
-﻿using System.Text.RegularExpressions;
+﻿using OpenFun_Core.Abstractions;
+using System.Text.RegularExpressions;
 
-namespace OpenFun_Core.Abstractions
+namespace OpenFun_CoreTests.Mock
 {
     public class TestFileProvider : IAppFileProvider
     {
