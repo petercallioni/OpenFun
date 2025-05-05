@@ -7,18 +7,16 @@ namespace Pangram.Models
     {
         private static readonly HashSet<char> Vowels = new HashSet<char> { 'a', 'e', 'i', 'o', 'u' };
 
-        IDailySeed dailySeed;
         DictionaryCache dictionaryCache;
 
-        public LetterSequence(IDailySeed dailySeed, DictionaryCache dictionaryCache)
+        public LetterSequence(DictionaryCache dictionaryCache)
         {
-            this.dailySeed = dailySeed;
             this.dictionaryCache = dictionaryCache;
         }
 
-        public List<char> GetSequence(bool daily = false)
+        public List<char> GetSequence(IDailySeed? dailySeed = null)
         {
-            Random random = daily
+            Random random = dailySeed != null
                 ? new Random(dailySeed.GetDailySeed())
                 : new Random();
 

@@ -18,8 +18,8 @@ namespace Pangram.Models.Tests
             IDailySeed dailySeed1 = new TestDailySeed(1);
             IDailySeed dailySeed2 = new TestDailySeed(2);
 
-            List<char> letterSequence1 = new LetterSequence(dailySeed1, dictionaryCache).GetSequence(true);
-            List<char> letterSequence2 = new LetterSequence(dailySeed2, dictionaryCache).GetSequence(true);
+            List<char> letterSequence1 = new LetterSequence(dictionaryCache).GetSequence(dailySeed1);
+            List<char> letterSequence2 = new LetterSequence(dictionaryCache).GetSequence(dailySeed2);
 
             Assert.IsFalse(letterSequence1.SequenceEqual(letterSequence2));
         }
@@ -29,10 +29,19 @@ namespace Pangram.Models.Tests
         {
             IDailySeed dailySeed1 = new TestDailySeed(1);
 
-            List<char> letterSequence1 = new LetterSequence(dailySeed1, dictionaryCache).GetSequence(true);
-            List<char> letterSequence2 = new LetterSequence(dailySeed1, dictionaryCache).GetSequence(true);
+            List<char> letterSequence1 = new LetterSequence(dictionaryCache).GetSequence(dailySeed1);
+            List<char> letterSequence2 = new LetterSequence(dictionaryCache).GetSequence(dailySeed1);
 
             Assert.IsTrue(letterSequence1.SequenceEqual(letterSequence2));
+        }
+
+        [TestMethod()]
+        public void GetSequenceTest_RandomProducesRandomResults()
+        {
+            List<char> letterSequence1 = new LetterSequence(dictionaryCache).GetSequence();
+            List<char> letterSequence2 = new LetterSequence(dictionaryCache).GetSequence();
+
+            Assert.IsFalse(letterSequence1.SequenceEqual(letterSequence2));
         }
     }
 }
