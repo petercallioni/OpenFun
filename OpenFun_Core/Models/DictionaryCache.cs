@@ -44,6 +44,16 @@ namespace OpenFun_Core.Models
             return isValid;
         }
 
+        public async Task<IEnumerable<string>> RootWords()
+        {
+            if (wordList == null)
+            {
+                await LoadDictionaryAsync();
+            }
+
+            return wordList!.RootWords; // Null overriden as dictionary is loaded from LoadDictionaryAsync()
+        }
+
         public async Task LoadDictionaryAsync(Dictionaries dictionary = Dictionaries.en_AU) // Australian dictionary is default
         {
             if (loadedDictionary == dictionary)

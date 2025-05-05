@@ -4,9 +4,15 @@ namespace OpenFun_CoreTests.Mock
 {
     public class TestDailySeed : IDailySeed
     {
-        public static int GetDailySeed()
+        private readonly int seed;
+        public TestDailySeed(int seed)
         {
-            return 1;
+            this.seed = seed;
+        }
+
+        public int GetDailySeed()
+        {
+            return seed;
         }
     }
 }

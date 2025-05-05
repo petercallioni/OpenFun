@@ -2,6 +2,6 @@
 {
     public interface IDailySeed
     {
-        static abstract int GetDailySeed();
+        public int GetDailySeed();
     }
 }

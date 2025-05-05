@@ -2,16 +2,16 @@
 {
     public class DailySeed : IDailySeed
     {
-        public static int GetDailySeed()
+        public int GetDailySeed()
         {
-            // Get current UTC time and adjust for UTC+10
-            DateTime utcNow = DateTime.UtcNow;
-            DateTime localDate = utcNow.AddHours(10);
+            // Adjust the current UTC date and time by 10 hours
+            DateTime adjustedDateTime = DateTime.UtcNow.AddHours(10);
 
-            // Use the date part (year, month, and day) to create a unique seed per day
-            int seed = localDate.Year * 10000 + localDate.Month * 100 + localDate.Day;
+            // Get only the date part (ignoring the time) and convert to an integer representation
+            DateTime adjustedDate = adjustedDateTime.Date; // Keep only the date component
 
-            return seed;
+            // Use the ticks of the adjusted date as the seed (ticks represent the number of 100-nanosecond intervals since 01/01/0001)
+            return adjustedDate.Ticks.GetHashCode();
         }
     }
 }

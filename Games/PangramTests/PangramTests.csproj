@@ -16,6 +16,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\OpenFun_CoreTests\OpenFun_CoreTests.csproj" />
 		<ProjectReference Include="..\Pangram\Pangram.csproj" />
 	</ItemGroup>
 
