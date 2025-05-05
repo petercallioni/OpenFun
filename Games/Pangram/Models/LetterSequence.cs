@@ -1,4 +1,5 @@
-﻿using OpenFun_Core.Models;
+﻿using OpenFun_Core.Extensions;
+using OpenFun_Core.Models;
 
 namespace Pangram.Models
 {
@@ -32,25 +33,9 @@ namespace Pangram.Models
 
             List<char> letters = candidateWord.ToLower().ToList();
 
-            Shuffle(letters, random);
+            letters.Shuffle(random);
 
             return letters;
-        }
-
-        /// <summary>
-        /// Shuffle the list using the Fisher–Yates algorithm.
-        /// </summary>
-        private void Shuffle<T>(IList<T> list, Random random)
-        {
-            int n = list.Count;
-            while (n > 1)
-            {
-                n--;
-                int k = random.Next(n + 1);
-                T temp = list[k];
-                list[k] = list[n];
-                list[n] = temp;
-            }
         }
     }
 }
