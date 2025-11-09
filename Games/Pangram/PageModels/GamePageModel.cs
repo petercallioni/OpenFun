@@ -116,6 +116,8 @@ namespace Pangram.PageModels
             {
                 loading.IsLoading = false;
             }
+
+            Sidebar.UpdateMaxScore(await gameModel.FindMaxWords());
         }
 
         [RelayCommand]

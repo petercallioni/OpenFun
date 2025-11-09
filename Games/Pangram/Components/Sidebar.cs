@@ -8,11 +8,13 @@ namespace Pangram.Components
         private string displayText;
         private bool isVisible;
         private int score;
+        private int maxScore;
 
         public Sidebar()
         {
             displayText = "Score: ";
-            score = -1;
+            score = 0;
+            maxScore = -1;
             isVisible = false;
         }
 
@@ -44,8 +46,13 @@ namespace Pangram.Components
 
         public void SetDisplayText()
         {
-            string text = IsVisible ? "Hide" : "Score";
-            text += score > 0 ? $" ({score})" : "";
+            string text = IsVisible ? "Hide:" : "Score:";
+            text += $" {score}";
+
+            if (maxScore > 0)
+            {
+                text += $" / {maxScore}";
+            }
 
             DisplayText = text;
         }
@@ -53,6 +60,12 @@ namespace Pangram.Components
         public void UpdateScore(int newScore)
         {
             score = newScore;
+            SetDisplayText();
+        }
+
+        public void UpdateMaxScore(int newMaxScore)
+        {
+            maxScore = newMaxScore;
             SetDisplayText();
         }
 

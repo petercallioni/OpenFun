@@ -8,6 +8,8 @@ namespace Pangram.Models
         private WordLetterSequence? wordLetterSequence;
         private List<string>? words;
         private int score;
+        private int maxScore;
+
         private IAppFileProvider appFileProvider;
         private IDailySeed dailySeed;
         private DictionaryCache dictionaryCache;
@@ -15,6 +17,7 @@ namespace Pangram.Models
         public int Score { get => score; set => score = value; }
         public WordLetterSequence? WordLetterSequence { get => wordLetterSequence; set => wordLetterSequence = value; }
         public List<string>? GuessedWords { get => words; }
+        public int MaxScore { get => maxScore; }
 
         public GameModel(IAppFileProvider appFileProvider, IDailySeed dailySeed)
         {
@@ -23,12 +26,15 @@ namespace Pangram.Models
             WordLetterSequence = null;
             dictionaryCache = null!;
             words = null;
+            maxScore = 0;
             score = 0;
         }
 
         public async Task InitialiseGame(bool daily)
         {
             dictionaryCache = new DictionaryCache(appFileProvider);
+            maxScore = 0;
+            score = 0;
 
             await dictionaryCache.LoadDictionaryAsync();
 
@@ -36,6 +42,20 @@ namespace Pangram.Models
                 dictionaryCache)
                 .GetSequence(daily ? dailySeed : null);
             words = new List<string>();
+        }
+
+        public async Task<int> FindMaxWords()
+        {
+            if (maxScore != 0)
+            {
+                return maxScore;
+            }
+
+            maxScore = await new LetterSequence(
+                 dictionaryCache)
+                 .FindMaxWords(WordLetterSequence!);
+
+            return maxScore;
         }
 
         public async Task<GuessWordResults> GuessWord(string word)

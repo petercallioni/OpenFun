@@ -6,7 +6,7 @@
             xmlns:sys="clr-namespace:System;assembly=netstandard"
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-            xmlns:gconverters="clr-namespace:Pangram.Converters"
+            xmlns:gconverters="clr-namespace:OpenFun_Core.Converters;assembly=OpenFun_Core"
             xmlns:models="clr-namespace:Pangram.Models"
             mc:Ignorable="d"
              BackgroundColor="#202020"
@@ -77,6 +77,21 @@
             </Setter>
         </Style>
 
+        <Style x:Key="PressableButtonStyle" TargetType="Button">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="Pressed">
+                            <VisualState.Setters>
+                                <Setter Property="Scale" Value="0.90" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+
         <ResourceDictionary>
             <gconverters:InvertedBoolConverter x:Key="InvertedBoolConverter" />
         </ResourceDictionary>
@@ -106,6 +121,7 @@
                     Text="{Binding Sidebar.DisplayText}"
                     Command="{Binding Sidebar.ToggleVisibilityCommand}"
                     IsVisible="{Binding Sidebar.IsVisible}"
+                    Style="{StaticResource PressableButtonStyle}"
                     TextColor="Black"
                     BackgroundColor="Azure">
                 </Button>
@@ -162,6 +178,7 @@
                     IsVisible="{Binding Sidebar.IsVisible, Converter={StaticResource InvertedBoolConverter}}"
                     TextColor="Black"
                     BackgroundColor="Azure"
+                    Style="{StaticResource PressableButtonStyle}"
                     Margin="0,5,0,0">
 
                 </Button>
@@ -176,6 +193,7 @@
                         Text="&lt;|"
                         BackgroundColor="Red"
                         TextColor="White"
+                        Style="{StaticResource PressableButtonStyle}"
                         IsEnabled="{Binding Loading.HasLoaded}"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveLetterCommand}">
                     </Button>
@@ -187,6 +205,7 @@
                         Text="Submit"
                         BackgroundColor="Green"
                         TextColor="White"
+                        Style="{StaticResource PressableButtonStyle}"
                         IsEnabled="{Binding Loading.HasLoaded}"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SubmitWordCommand}">
                     </Button>
@@ -289,30 +308,33 @@
                     WidthRequest="100"
                     TextColor="Black"
                     BackgroundColor="Azure"
+                    Style="{StaticResource PressableButtonStyle}"
                     Margin="10,0,0,20">
                 </Button>
                 
                 <HorizontalStackLayout HorizontalOptions="Center">
                     <Button
-                Text="Random"
-                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.NewGameCommand}"
-                CommandParameter="{x:Static sys:Boolean.FalseString}"
-                WidthRequest="100"
-                IsEnabled="{Binding Loading.IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+                        Text="Random"
+                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.NewGameCommand}"
+                        CommandParameter="{x:Static sys:Boolean.FalseString}"
+                        WidthRequest="100"
+                        IsEnabled="{Binding Loading.IsLoading, Converter={StaticResource InvertedBoolConverter}}"
                         TextColor="Black"
                         BackgroundColor="Azure"
-                Margin="0,0,10,0">
+                        Style="{StaticResource PressableButtonStyle}"
+                        Margin="0,0,10,0">
                     </Button>
 
                     <Button
-                Text="Daily"
-                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.NewGameCommand}"
-                CommandParameter="{x:Static sys:Boolean.TrueString}"
-                WidthRequest="100"
-                IsEnabled="{Binding Loading.IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+                        Text="Daily"
+                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.NewGameCommand}"
+                        CommandParameter="{x:Static sys:Boolean.TrueString}"
+                        WidthRequest="100"
+                        IsEnabled="{Binding Loading.IsLoading, Converter={StaticResource InvertedBoolConverter}}"
                         TextColor="Black"
                         BackgroundColor="Azure"
-                Margin="10,0,0,0">
+                        Style="{StaticResource PressableButtonStyle}"
+                        Margin="10,0,0,0">
                     </Button>
                 </HorizontalStackLayout>
 

@@ -12,6 +12,56 @@ namespace Pangram.Models
             this.dictionaryCache = dictionaryCache;
         }
 
+
+        public async Task<int> FindMaxWords(WordLetterSequence wordLetterSequence)
+        {
+            if (dictionaryCache == null)
+            {
+                throw new InvalidOperationException("Dictionary cache is not initialized.");
+            }
+
+            List<string> words = (await dictionaryCache.RootWords())
+                .Select(w => w.ToLowerInvariant())
+                .ToList();
+
+            Dictionary<string, bool> filteredWords = new Dictionary<string, bool>();
+
+            words
+                .Where(word => IsValidWord(word, wordLetterSequence))
+                .ToList()
+                .ForEach(word => filteredWords.TryAdd(word, true));
+
+            int count = filteredWords.Count;
+
+            return count;
+        }
+
+        private bool IsValidWord(string word, WordLetterSequence wordLetterSequence)
+        {
+            if (string.IsNullOrEmpty(word))
+                return false;
+
+            // Ensure the word contains the first character of the sequence
+            char firstChar = wordLetterSequence.Letters[0];
+            if (!word.Contains(firstChar))
+                return false;
+
+            // Ensure the word contains at least one other character from the sequence
+            bool containsOtherCharacter = wordLetterSequence.Letters
+                .Skip(1) // Skip the first character
+                .Any(letter => word.Contains(letter));
+
+            if (!containsOtherCharacter)
+                return false;
+
+            // Ensure the word only contains characters from the sequence
+            HashSet<char> sequenceSet = new HashSet<char>(wordLetterSequence.Letters);
+            if (word.Any(c => !sequenceSet.Contains(c)))
+                return false;
+
+            return true;
+        }
+
         public WordLetterSequence GetSequence(IDailySeed? dailySeed = null)
         {
             Random random = dailySeed != null
