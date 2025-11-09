@@ -9,6 +9,7 @@
             xmlns:gconverters="clr-namespace:Pangram.Converters"
             xmlns:models="clr-namespace:Pangram.Models"
             mc:Ignorable="d"
+             BackgroundColor="#202020"
              Title="Pangram">
 
     <ContentPage.Resources>
@@ -104,7 +105,9 @@
                 <Button
                     Text="{Binding Sidebar.DisplayText}"
                     Command="{Binding Sidebar.ToggleVisibilityCommand}"
-                    IsVisible="{Binding Sidebar.IsVisible}">
+                    IsVisible="{Binding Sidebar.IsVisible}"
+                    TextColor="Black"
+                    BackgroundColor="Azure">
                 </Button>
                 
                 <Border
@@ -140,6 +143,7 @@
                     <Label
                     Text="{Binding CurrentWord}"
                     FontSize="25"
+                        TextColor="White"
                     HorizontalOptions="Center">
                     </Label>
                 </Border>
@@ -156,6 +160,8 @@
                     Text="{Binding Sidebar.DisplayText}"
                     Command="{Binding Sidebar.ToggleVisibilityCommand}"
                     IsVisible="{Binding Sidebar.IsVisible, Converter={StaticResource InvertedBoolConverter}}"
+                    TextColor="Black"
+                    BackgroundColor="Azure"
                     Margin="0,5,0,0">
 
                 </Button>
@@ -168,6 +174,8 @@
                         HeightRequest="20"
                         FontSize="20"
                         Text="&lt;|"
+                        BackgroundColor="Red"
+                        TextColor="White"
                         IsEnabled="{Binding Loading.HasLoaded}"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveLetterCommand}">
                     </Button>
@@ -177,6 +185,8 @@
                         WidthRequest="80"
                         HeightRequest="20"
                         Text="Submit"
+                        BackgroundColor="Green"
+                        TextColor="White"
                         IsEnabled="{Binding Loading.HasLoaded}"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SubmitWordCommand}">
                     </Button>
@@ -277,6 +287,8 @@
                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.JumbleLettersCommand}"
                     IsEnabled="{Binding Loading.HasLoaded}"
                     WidthRequest="100"
+                    TextColor="Black"
+                    BackgroundColor="Azure"
                     Margin="10,0,0,20">
                 </Button>
                 
@@ -287,6 +299,8 @@
                 CommandParameter="{x:Static sys:Boolean.FalseString}"
                 WidthRequest="100"
                 IsEnabled="{Binding Loading.IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+                        TextColor="Black"
+                        BackgroundColor="Azure"
                 Margin="0,0,10,0">
                     </Button>
 
@@ -296,6 +310,8 @@
                 CommandParameter="{x:Static sys:Boolean.TrueString}"
                 WidthRequest="100"
                 IsEnabled="{Binding Loading.IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+                        TextColor="Black"
+                        BackgroundColor="Azure"
                 Margin="10,0,0,0">
                     </Button>
                 </HorizontalStackLayout>
