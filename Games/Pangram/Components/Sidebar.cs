@@ -44,10 +44,10 @@ namespace Pangram.Components
 
         public void SetDisplayText()
         {
-            DisplayText = IsVisible
-                ? "Hide Words" : score == -1
-                    ? "Score: "
-                : $"Score: ({score})";
+            string text = IsVisible ? "Hide" : "Score";
+            text += score > 0 ? $" ({score})" : "";
+
+            DisplayText = text;
         }
 
         public void UpdateScore(int newScore)

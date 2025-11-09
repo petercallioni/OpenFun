@@ -14,8 +14,11 @@ namespace Pangram.PageModels
         private readonly ModalErrorHandler errorHandler;
         private readonly GameModel gameModel;
         private readonly ObservableCollection<string> guessedWords = new ObservableCollection<string>();
+
+        // Components
         private readonly Sidebar sidebar = new Sidebar();
         private readonly LastGuess lastGuess = new LastGuess();
+        private readonly Loading loading = new Loading();
 
         private GuessWordResults lastGuessResult;
         private List<char> otherCharacters;
@@ -74,8 +77,11 @@ namespace Pangram.PageModels
 
         public ObservableCollection<string> GuessedWords => guessedWords;
 
+
+        // Components
         public Sidebar Sidebar => sidebar;
         public LastGuess LastGuess => lastGuess;
+        public Loading Loading => loading;
 
         public GamePageModel(ModalErrorHandler errorHandler)
         {
@@ -92,16 +98,23 @@ namespace Pangram.PageModels
         {
             try
             {
+                loading.IsLoading = true;
+                loading.HasLoaded = false;
                 await gameModel.InitialiseGame(bool.Parse(daily));
                 PrimeCharacter = char.ToUpper(gameModel.WordLetterSequence!.Letters[0]);
                 OtherCharacters = gameModel.WordLetterSequence.Letters
                     .Skip(1)
                     .Select(x => char.ToUpper(x))
                     .ToList();
+                loading.HasLoaded = true;
             }
             catch (Exception ex)
             {
                 errorHandler.HandleError(ex);
+            }
+            finally
+            {
+                loading.IsLoading = false;
             }
         }
 

@@ -113,7 +113,7 @@
                     WidthRequest="200"
                     IsVisible="{Binding Sidebar.IsVisible}">
                     <ListView ItemsSource="{Binding GuessedWords}"
-                              HorizontalOptions="Center">
+                              HorizontalOptions="Start">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
@@ -155,7 +155,7 @@
                 <Button
                     Text="{Binding Sidebar.DisplayText}"
                     Command="{Binding Sidebar.ToggleVisibilityCommand}"
-                    IsVisible="{Binding Sidebar.IsVisible, Converter={StaticResource gconverters:InvertedBoolConverter}}"
+                    IsVisible="{Binding Sidebar.IsVisible, Converter={StaticResource InvertedBoolConverter}}"
                     Margin="0,5,0,0">
 
                 </Button>
@@ -168,6 +168,7 @@
                         HeightRequest="20"
                         FontSize="20"
                         Text="&lt;|"
+                        IsEnabled="{Binding Loading.HasLoaded}"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveLetterCommand}">
                     </Button>
                     
@@ -176,6 +177,7 @@
                         WidthRequest="80"
                         HeightRequest="20"
                         Text="Submit"
+                        IsEnabled="{Binding Loading.HasLoaded}"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SubmitWordCommand}">
                     </Button>
                 </HorizontalStackLayout>
@@ -273,6 +275,7 @@
                 <Button
                     Text="Shuffle"
                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.JumbleLettersCommand}"
+                    IsEnabled="{Binding Loading.HasLoaded}"
                     WidthRequest="100"
                     Margin="10,0,0,20">
                 </Button>
@@ -283,6 +286,7 @@
                 Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.NewGameCommand}"
                 CommandParameter="{x:Static sys:Boolean.FalseString}"
                 WidthRequest="100"
+                IsEnabled="{Binding Loading.IsLoading, Converter={StaticResource InvertedBoolConverter}}"
                 Margin="0,0,10,0">
                     </Button>
 
@@ -291,9 +295,18 @@
                 Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.NewGameCommand}"
                 CommandParameter="{x:Static sys:Boolean.TrueString}"
                 WidthRequest="100"
+                IsEnabled="{Binding Loading.IsLoading, Converter={StaticResource InvertedBoolConverter}}"
                 Margin="10,0,0,0">
                     </Button>
                 </HorizontalStackLayout>
+
+                <Label
+                    HorizontalOptions="Center"
+                    Margin="0,5,0,0"
+                    IsVisible="{Binding Loading.IsLoading}"
+                    TextColor="Green">
+                    Loading ...
+                </Label>
             </VerticalStackLayout>
         </HorizontalStackLayout>
     </Grid>
