@@ -1,6 +1,6 @@
-using OpenFun.Utilities;
+using OpenFun_Core.Utilities;
 
-namespace OpenFun.Services
+namespace OpenFun_Core.Services
 {
     /// <summary>
     /// Modal Error Handler.

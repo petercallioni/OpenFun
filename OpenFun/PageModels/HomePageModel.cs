@@ -1,7 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using OpenFun.Models;
-using OpenFun.Services;
+using OpenFun_Core.Services;
 
 namespace OpenFun.PageModels
 {

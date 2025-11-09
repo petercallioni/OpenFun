@@ -1,4 +1,4 @@
-namespace OpenFun.Services
+namespace OpenFun_Core.Services
 {
     /// <summary>
     /// Error Handler Service.

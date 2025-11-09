@@ -3,10 +3,8 @@ using OpenFun_Core.Models;
 
 namespace Pangram.Models
 {
-    public class LetterSequence
+    public partial class LetterSequence
     {
-        private static readonly HashSet<char> Vowels = new HashSet<char> { 'a', 'e', 'i', 'o', 'u' };
-
         DictionaryCache dictionaryCache;
 
         public LetterSequence(DictionaryCache dictionaryCache)
@@ -14,26 +12,89 @@ namespace Pangram.Models
             this.dictionaryCache = dictionaryCache;
         }
 
-        public List<char> GetSequence(IDailySeed? dailySeed = null)
+        public WordLetterSequence GetSequence(IDailySeed? dailySeed = null)
         {
             Random random = dailySeed != null
                 ? new Random(dailySeed.GetDailySeed())
                 : new Random();
 
-            List<string> candidates = dictionaryCache.RootWords().Result
-                .Where(word => word.Length == 7 &&
-                               word.All(char.IsLetter) &&
-                               word.ToLower().Distinct().Count() == 7 &&
-                               word.ToLower().Any(chars => Vowels.Contains(chars)))
+            List<string> words = dictionaryCache.RootWords().Result
+                .Select(w => w.ToLowerInvariant())
+                .Where(w => w.Length >= 7)
                 .ToList();
 
-            string candidateWord = candidates[random.Next(candidates.Count)];
+            words.Shuffle(random);
 
-            List<char> letters = candidateWord.ToLower().ToList();
+            while (true)
+            {
+                // Generate a random sequence of 7 alphabetical characters.
+                string validSequence = GenerateRandomSequence(7, random);
 
-            letters.Shuffle(random);
+                // Find the first word from the dictionary that can be composed
+                // from the letters in validSequence.
+                string? validWord = words
+                    .AsParallel()
+                    .FirstOrDefault(word => CanConstructWordFromLetters(word, validSequence));
 
-            return letters;
+                if (validWord != null)
+                {
+                    Console.WriteLine("Valid sequence found: " + validSequence + " with word: " + validWord);
+                    // Return the record with the found word and the character list.
+                    return new WordLetterSequence(validSequence.ToList(), validWord);
+                }
+                // If no valid word is found, loop again with a new sequence.
+            }
+        }
+
+        // Generates a random sequence of 'length' characters from a-z.
+        private static string GenerateRandomSequence(int length, Random random)
+        {
+            List<char> avaliableLetters = new List<char>("abcdefghijklmnopqrstuvwxyz");
+            List<char> letters = new List<char>();
+
+            while (letters.Count < length)
+            {
+                // Generate a random index to select a letter from the available letters.
+                int index = random.Next(avaliableLetters.Count);
+                char letter = avaliableLetters[index];
+
+                letters.Add(letter);
+                avaliableLetters.RemoveAt(index); // Remove the letter to avoid duplicates.
+            }
+
+            return new string(letters.ToArray());
+        }
+
+        // Checks whether 'word' contains all letters (with required counts) from 'sequence'.
+        private static bool CanConstructWordFromLetters(string word, string sequence)
+        {
+            // Build a frequency dictionary for the letters in the sequence.
+            Dictionary<char, int> sequenceLetterCounts = sequence.GroupBy(c => c)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            // Contains a letter not in the sequence
+            if (word.Any(c => !sequenceLetterCounts.ContainsKey(c)))
+            {
+                return false;
+            }
+
+            foreach (KeyValuePair<char, int> kvp in sequenceLetterCounts)
+            {
+                char letter = kvp.Key;
+                int requiredCount = kvp.Value;
+
+                // Count how many times 'letter' appears in 'word'.
+                int wordCount = word.Count(c => c == letter);
+
+                // If the word doesn't have enough occurrences, it doesn't qualify.
+                if (wordCount < requiredCount)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
+

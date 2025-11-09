@@ -3,6 +3,6 @@
     public class MauiFileProvider : IAppFileProvider
     {
         public Task<Stream> OpenAppPackageFileAsync(string filename)
-            => FileSystem.OpenAppPackageFileAsync(filename);
+            => FileSystem.OpenAppPackageFileAsync(Path.Combine("Resources", "Raw", filename));
     }
 }

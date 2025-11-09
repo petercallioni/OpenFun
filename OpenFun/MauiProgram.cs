@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using OpenFun.PageModels;
-using OpenFun.Services;
+using OpenFun_Core.Services;
 
 namespace OpenFun
 {
@@ -24,6 +24,7 @@ namespace OpenFun
 #endif
             builder.Services.AddSingleton<ModalErrorHandler>();
             builder.Services.AddSingleton<HomePageModel>();
+            builder.Services.AddSingleton<Pangram.PageModels.GamePageModel>();
 
             return builder.Build();
         }

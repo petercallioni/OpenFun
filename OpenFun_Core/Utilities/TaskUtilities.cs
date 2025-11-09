@@ -1,6 +1,6 @@
-using OpenFun.Services;
+using OpenFun_Core.Services;
 
-namespace OpenFun.Utilities
+namespace OpenFun_Core.Utilities
 {
     /// <summary>
     /// Task Utilities.

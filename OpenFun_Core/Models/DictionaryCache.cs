@@ -73,7 +73,7 @@ namespace OpenFun_Core.Models
             using (StreamReader dicStreamReader = new StreamReader(dicStream))
             {
 
-                wordList = WordList.CreateFromStreamsAsync(dicStream, affStream).Result;
+                wordList = await WordList.CreateFromStreamsAsync(dicStream, affStream);
             }
 
             loadedDictionary = dictionary;
