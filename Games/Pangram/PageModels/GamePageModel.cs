@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using OpenFun_Core.Abstractions;
 using OpenFun_Core.Models;
 using OpenFun_Core.Services;
+using Pangram.Components;
 using Pangram.Models;
 using System.Collections.ObjectModel;
 
@@ -13,6 +14,8 @@ namespace Pangram.PageModels
         private readonly ModalErrorHandler errorHandler;
         private readonly GameModel gameModel;
         private readonly ObservableCollection<string> guessedWords = new ObservableCollection<string>();
+        private readonly Sidebar sidebar = new Sidebar();
+        private readonly LastGuess lastGuess = new LastGuess();
 
         private GuessWordResults lastGuessResult;
         private List<char> otherCharacters;
@@ -71,6 +74,9 @@ namespace Pangram.PageModels
 
         public ObservableCollection<string> GuessedWords => guessedWords;
 
+        public Sidebar Sidebar => sidebar;
+        public LastGuess LastGuess => lastGuess;
+
         public GamePageModel(ModalErrorHandler errorHandler)
         {
             this.errorHandler = errorHandler;
@@ -109,7 +115,7 @@ namespace Pangram.PageModels
         [RelayCommand]
         private void AddLetter(char letter)
         {
-            CurrentWord = CurrentWord + letter;
+            CurrentWord += letter;
         }
 
         [RelayCommand]
@@ -124,16 +130,25 @@ namespace Pangram.PageModels
         [RelayCommand]
         private async Task SubmitWord()
         {
+            if (gameModel == null)
+            {
+                return; // Do nothing
+            }
+
             LastGuessResult = await gameModel.GuessWord(currentWord);
 
             if (LastGuessResult == GuessWordResults.VALID)
             {
-                gameModel?.GuessedWords?.Where(word => !GuessedWords.Contains(word))
+                gameModel?.GuessedWords?.Where(word => !GuessedWords.Contains(word.ToUpper()))
                                       .ToList()
                                       .ForEach(word => GuessedWords.Add(word.ToUpper()));
 
                 CurrentWord = string.Empty;
+
+                sidebar.UpdateScore(gameModel!.Score);
             }
+
+            lastGuess.SetLastGuess(LastGuessResult);
         }
     }
 }
