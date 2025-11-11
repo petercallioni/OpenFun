@@ -117,6 +117,8 @@ namespace Pangram.PageModels
                 loading.IsLoading = false;
             }
 
+            GuessedWords.Clear();
+            Sidebar.UpdateScore(0);
             Sidebar.UpdateMaxScore(await gameModel.FindMaxWords());
         }
 
