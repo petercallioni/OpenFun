@@ -14,11 +14,13 @@ namespace Pangram.PageModels
         private readonly ModalErrorHandler errorHandler;
         private readonly GameModel gameModel;
         private readonly ObservableCollection<string> guessedWords = new ObservableCollection<string>();
+        private readonly DatabaseService databaseService;
 
         // Components
         private readonly Sidebar sidebar = new Sidebar();
         private readonly LastGuess lastGuess = new LastGuess();
         private readonly Loading loading = new Loading();
+        private readonly History history = new History();
 
         private GuessWordResults lastGuessResult;
         private List<char> otherCharacters;
@@ -82,25 +84,88 @@ namespace Pangram.PageModels
         public Sidebar Sidebar => sidebar;
         public LastGuess LastGuess => lastGuess;
         public Loading Loading => loading;
+        public History History => history;
+        private Task loadHistory;
 
-        public GamePageModel(ModalErrorHandler errorHandler)
+        public GamePageModel(ModalErrorHandler errorHandler, DatabaseService databaseService)
         {
             this.errorHandler = errorHandler;
+            this.databaseService = databaseService;
             LastGuessResult = GuessWordResults.NONE;
             currentWord = string.Empty;
             otherCharacters = new List<char>();
             primeCharacter = '\0';
             gameModel = new GameModel(new MauiFileProvider(), new DailySeed());
+            loadHistory = LoadHistory();
         }
+
+        [RelayCommand]
+        private async Task LoadGame(PangramData data)
+        {
+            try
+            {
+                // Save current challenge if one is loaded
+                if (Loading.HasLoaded)
+                {
+                    await SaveOrUpdateCurrentChallenge();
+                }
+
+                Loading.IsLoading = true;
+                Loading.HasLoaded = false;
+
+                await gameModel.LoadSavedGame(data);
+
+                Loading.IsLoading = false;
+                Loading.HasLoaded = true;
+                OtherCharacters = gameModel.WordLetterSequence!.Letters
+                    .Skip(1)
+                    .Select(x => char.ToUpper(x))
+                    .ToList();
+                PrimeCharacter = char.ToUpper(gameModel.WordLetterSequence!.Letters[0]);
+
+                Sidebar.UpdateScore(gameModel.Score);
+                Sidebar.UpdateMaxScore(gameModel.MaxScore);
+            }
+            catch (Exception ex)
+            {
+                errorHandler.HandleError(ex);
+            }
+            finally
+            {
+                loading.IsLoading = false;
+            }
+
+            GuessedWords.Clear();
+            Sidebar.UpdateScore(0);
+            Sidebar.UpdateMaxScore(await gameModel.FindMaxWords());
+        }
+
 
         [RelayCommand]
         private async Task NewGame(string daily)
         {
+            bool newGameIsDaily = bool.Parse(daily);
             try
             {
+                await loadHistory; // Ensure history is loaded
+                if (newGameIsDaily)
+                {
+                    PangramData? existingDaily = History.PangramHistory
+                        .Where(item => item.PangramData.IsDaily && item.PangramData.Date.Date == DateTime.Now.Date)
+                        .ToList()
+                        .FirstOrDefault()
+                        ?.PangramData;
+
+                    if (existingDaily != null)
+                    {
+                        await LoadGame(existingDaily);
+                        return; // Daily game already loaded
+                    }
+                }
+
                 loading.IsLoading = true;
                 loading.HasLoaded = false;
-                await gameModel.InitialiseGame(bool.Parse(daily));
+                await gameModel.InitialiseGame(newGameIsDaily);
                 PrimeCharacter = char.ToUpper(gameModel.WordLetterSequence!.Letters[0]);
                 OtherCharacters = gameModel.WordLetterSequence.Letters
                     .Skip(1)
@@ -120,6 +185,8 @@ namespace Pangram.PageModels
             GuessedWords.Clear();
             Sidebar.UpdateScore(0);
             Sidebar.UpdateMaxScore(await gameModel.FindMaxWords());
+
+            await SaveOrUpdateCurrentChallenge(); // Adds the game to the history
         }
 
         [RelayCommand]
@@ -154,7 +221,7 @@ namespace Pangram.PageModels
 
             LastGuessResult = await gameModel.GuessWord(currentWord);
 
-            if (LastGuessResult == GuessWordResults.VALID)
+            if (LastGuessResult == GuessWordResults.VALID || LastGuessResult == GuessWordResults.VALID_PANGRAM)
             {
                 gameModel?.GuessedWords?.Where(word => !GuessedWords.Contains(word.ToUpper()))
                                       .ToList()
@@ -166,6 +233,30 @@ namespace Pangram.PageModels
             }
 
             lastGuess.SetLastGuess(LastGuessResult);
+        }
+
+        [RelayCommand]
+        private async Task SaveOrUpdateCurrentChallenge()
+        {
+            PangramData data = new PangramData(gameModel);
+
+            await databaseService.AddOrUpdateAsync<PangramData>(data, word => word.LetterSequence == data.LetterSequence);
+
+            _ = LoadHistory();
+        }
+
+        private async Task LoadHistory()
+        {
+            try
+            {
+                IEnumerable<PangramData> history = await databaseService.RetrieveAllAsync<PangramData>();
+                await History.UpdateHistoryAsync(history);
+            }
+            catch (Exception ex)
+            {
+                errorHandler.HandleError(ex);
+                return;
+            }
         }
     }
 }

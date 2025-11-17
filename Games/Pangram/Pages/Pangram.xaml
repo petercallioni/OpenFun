@@ -94,6 +94,9 @@
 
         <ResourceDictionary>
             <gconverters:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+            <gconverters:DateTimeToStringConverter x:Key="DateTimeToStringConverter" />
+            <gconverters:FirstCharacterConverter x:Key="FirstCharacterConverter" />
+            <gconverters:RemainingCharactersConverter x:Key="RemainingCharactersConverter" />
         </ResourceDictionary>
         
     </ContentPage.Resources>
@@ -129,7 +132,7 @@
                 <Border
                     Background="Gray"
                     Margin="0,5,0,0"
-                    Padding="5,0,0,0"
+                    Padding="5,0,5,0"
                     WidthRequest="200"
                     IsVisible="{Binding Sidebar.IsVisible}">
                     <ListView ItemsSource="{Binding GuessedWords}"
@@ -173,16 +176,42 @@
                     HorizontalOptions="Center"
                     Margin="0,5,0,10"/>
 
-                <Button
-                    Text="{Binding Sidebar.DisplayText}"
-                    Command="{Binding Sidebar.ToggleVisibilityCommand}"
-                    IsVisible="{Binding Sidebar.IsVisible, Converter={StaticResource InvertedBoolConverter}}"
-                    TextColor="Black"
-                    BackgroundColor="Azure"
-                    Style="{StaticResource PressableButtonStyle}"
-                    Margin="0,5,0,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                </Button>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Button
+                        Text="{Binding Sidebar.DisplayText}"
+                        Command="{Binding Sidebar.ToggleVisibilityCommand}"
+                        IsVisible="{Binding Sidebar.IsVisible, Converter={StaticResource InvertedBoolConverter}}"
+                        TextColor="Black"
+                        BackgroundColor="Azure"
+                        Style="{StaticResource PressableButtonStyle}"
+                        Margin="0,5,5,0"
+                        Grid.Column="0">
+
+                    </Button>
+
+                    <Button
+                        Text="History"
+                        Command="{Binding History.ToggleVisibilityCommand}"
+                        IsVisible="{Binding History.IsVisible, Converter={StaticResource InvertedBoolConverter}}"
+                        TextColor="Black"
+                        BackgroundColor="Azure"
+                        Style="{StaticResource PressableButtonStyle}"
+                        Margin="5,5,0,0"
+                        Grid.Column="1">
+
+                    </Button>
+
+                </Grid>
+
                 
                 <HorizontalStackLayout HorizontalOptions="Center"
                                        Margin="0,20,0,0">
@@ -346,6 +375,80 @@
                     TextColor="Green">
                     Loading ...
                 </Label>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout 
+                HorizontalOptions="Fill" 
+                VerticalOptions="Fill"
+                Margin="20,0,0,0">
+
+                <Button
+                    Text="History"
+                    Command="{Binding History.ToggleVisibilityCommand}"
+                    IsVisible="{Binding History.IsVisible}"
+                    Style="{StaticResource PressableButtonStyle}"
+                    TextColor="Black"
+                    BackgroundColor="Azure">
+                </Button>
+
+                <Border
+                    Background="Gray"
+                    Margin="0,5,0,0"
+                    Padding="5,0,5,0"
+                    WidthRequest="200"
+                    IsVisible="{Binding History.IsVisible}">
+                    <ListView ItemsSource="{Binding History.PangramHistory}"
+                              HorizontalOptions="Start">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="pageModels:PangramDataVM">
+                                <ViewCell>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Label 
+                                            Text="{Binding Source={RelativeSource Mode=FindAncestorBindingContext, AncestorType={x:Type pageModels:PangramDataVM}},
+                                            Path=PangramData.Date, 
+                                            Converter={StaticResource DateTimeToStringConverter}}" 
+                                            FontSize="15" 
+                                            TextColor="White" 
+                                            VerticalOptions="Center" 
+                                            HorizontalOptions="Start" 
+                                            Padding="0,0,0,0" 
+                                            Grid.Row="0"
+                                            Grid.Column="0"/>
+
+                                        <Label 
+                                            VerticalOptions="Center" 
+                                            HorizontalOptions="End" 
+                                            Padding="0,0,0,0"
+                                            Grid.Row="0"
+                                            Grid.Column="1">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding Source={RelativeSource Mode=FindAncestorBindingContext, AncestorType={x:Type pageModels:PangramDataVM}},
+                                                        Path=PangramData.LetterSequence, 
+                                                        Converter={StaticResource FirstCharacterConverter}}" 
+                                                          TextColor="Orange" FontAttributes="Bold" FontSize="15" />
+                                                    <Span Text="{Binding Source={RelativeSource Mode=FindAncestorBindingContext, AncestorType={x:Type pageModels:PangramDataVM}},
+                                                        Path=PangramData.LetterSequence, 
+                                                        Converter={StaticResource RemainingCharactersConverter}}" 
+                                                          TextColor="White" FontSize="15" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Border>
             </VerticalStackLayout>
         </HorizontalStackLayout>
     </Grid>

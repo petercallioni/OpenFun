@@ -9,16 +9,18 @@ namespace Pangram.Models
         private List<string>? words;
         private int score;
         private int maxScore;
+        private bool isDaily;
+        private string? foundPangramWord;
 
         private IAppFileProvider appFileProvider;
         private IDailySeed dailySeed;
         private DictionaryCache dictionaryCache;
-
         public int Score { get => score; set => score = value; }
         public WordLetterSequence? WordLetterSequence { get => wordLetterSequence; set => wordLetterSequence = value; }
         public List<string>? GuessedWords { get => words; }
         public int MaxScore { get => maxScore; }
-
+        public bool IsDaily { get => isDaily; }
+        public string? FoundPangramWord { get => foundPangramWord; }
         public GameModel(IAppFileProvider appFileProvider, IDailySeed dailySeed)
         {
             this.appFileProvider = appFileProvider;
@@ -30,11 +32,32 @@ namespace Pangram.Models
             score = 0;
         }
 
+        public async Task LoadSavedGame(PangramData data)
+        {
+            dictionaryCache ??= new DictionaryCache(appFileProvider);
+            maxScore = data.MaxScore;
+            words = data.GetGuessedWordsList();
+            score = words.Count;
+
+            isDaily = data.IsDaily;
+            await dictionaryCache.LoadDictionaryAsync();
+
+            WordLetterSequence = new WordLetterSequence(
+                data.LetterSequence.ToLower().ToList(),
+                data.Word.ToLower());
+
+            if (data.GotPangram)
+            {
+                foundPangramWord = data.Word;
+            }
+        }
+
         public async Task InitialiseGame(bool daily)
         {
-            dictionaryCache = new DictionaryCache(appFileProvider);
+            dictionaryCache ??= new DictionaryCache(appFileProvider);
             maxScore = 0;
             score = 0;
+            isDaily = daily;
 
             await dictionaryCache.LoadDictionaryAsync();
 
@@ -87,6 +110,14 @@ namespace Pangram.Models
             {
                 score++;
                 words.Add(word);
+
+                // If the word contains all letters, it's a pangram
+                if (WordLetterSequence.Letters.All(c => word.Contains(c)))
+                {
+                    foundPangramWord = word;
+                    return GuessWordResults.VALID_PANGRAM;
+                }
+
                 return GuessWordResults.VALID;
             }
             else

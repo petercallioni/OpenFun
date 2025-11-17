@@ -4,6 +4,7 @@
     {
         NONE,
         VALID,
+        VALID_PANGRAM,
         INVALID,
         ALREADY_GUESSED,
         FORBIDDEN_CHARACTERS,

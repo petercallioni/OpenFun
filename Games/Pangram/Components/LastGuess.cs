@@ -31,6 +31,7 @@ namespace Pangram.Components
                 GuessWordResults.FORBIDDEN_CHARACTERS => "Contains Invalid Characters",
                 GuessWordResults.DOES_NOT_CONTAIN_MAIN_LETTER => "Does Not Contain Main Letter",
                 GuessWordResults.VALID => string.Empty,
+                GuessWordResults.VALID_PANGRAM => string.Empty,
                 GuessWordResults.NONE => string.Empty,
                 _ => string.Empty,
             };
@@ -39,6 +40,7 @@ namespace Pangram.Components
             result switch
             {
                 GuessWordResults.VALID => Colors.Lime,
+                GuessWordResults.VALID_PANGRAM => Colors.Gold,
                 GuessWordResults.INVALID => Colors.Tomato,
                 GuessWordResults.ALREADY_GUESSED => Colors.LightGray,
                 GuessWordResults.FORBIDDEN_CHARACTERS => Colors.Purple,
