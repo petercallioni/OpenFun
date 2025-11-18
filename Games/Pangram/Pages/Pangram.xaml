@@ -429,17 +429,18 @@
                                             HorizontalOptions="End" 
                                             Padding="0,0,0,0"
                                             Grid.Row="0"
+                                            FontFamily="IBMPlexMonoRegular"
                                             Grid.Column="1">
                                             <Label.FormattedText>
                                                 <FormattedString>
                                                     <Span Text="{Binding Source={RelativeSource Mode=FindAncestorBindingContext, AncestorType={x:Type pageModels:PangramDataVM}},
                                                         Path=PangramData.LetterSequence, 
                                                         Converter={StaticResource FirstCharacterConverter}}" 
-                                                          TextColor="Orange" FontAttributes="Bold" FontSize="15" />
+                                                          TextColor="Orange" FontAttributes="Bold" FontSize="15" FontFamily="IBMPlexMonoRegular"/>
                                                     <Span Text="{Binding Source={RelativeSource Mode=FindAncestorBindingContext, AncestorType={x:Type pageModels:PangramDataVM}},
                                                         Path=PangramData.LetterSequence, 
                                                         Converter={StaticResource RemainingCharactersConverter}}" 
-                                                          TextColor="White" FontSize="15" />
+                                                          TextColor="White" FontSize="15" FontFamily="IBMPlexMonoRegular"/>
                                                 </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
