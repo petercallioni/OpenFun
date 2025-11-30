@@ -15,6 +15,7 @@ namespace Pangram.PageModels
         private readonly GameModel gameModel;
         private readonly ObservableCollection<string> guessedWords = new ObservableCollection<string>();
         private readonly DatabaseService databaseService;
+        private readonly DialogService dialogService;
 
         // Components
         private readonly Sidebar sidebar = new Sidebar();
@@ -87,10 +88,11 @@ namespace Pangram.PageModels
         public History History => history;
         private Task loadHistory;
 
-        public GamePageModel(ModalErrorHandler errorHandler, DatabaseService databaseService)
+        public GamePageModel(ModalErrorHandler errorHandler, DatabaseService databaseService, DialogService dialogService)
         {
             this.errorHandler = errorHandler;
             this.databaseService = databaseService;
+            this.dialogService = dialogService;
             LastGuessResult = GuessWordResults.NONE;
             currentWord = string.Empty;
             otherCharacters = new List<char>();
@@ -100,15 +102,37 @@ namespace Pangram.PageModels
         }
 
         [RelayCommand]
-        private void DeleteGame(PangramDataVM pangramDataVM)
+        private async Task DeleteGame(PangramDataVM pangramDataVM)
         {
-            History.PangramHistory.Remove(pangramDataVM);
-            _ = databaseService.DeleteAsync<PangramData>(pangramDataVM.PangramData.Id);
+            bool confirmed = await dialogService.DisplayConfirmationAsync(
+                "Delete Game",
+                "Are you sure you want to delete this game?",
+                "Delete",
+                "Cancel"
+            );
+
+            if (confirmed)
+            {
+                History.PangramHistory.Remove(pangramDataVM);
+                _ = databaseService.DeleteAsync<PangramData>(pangramDataVM.PangramData.Id);
+            }
         }
 
         [RelayCommand]
         private async Task LoadGame(PangramData data)
         {
+            bool confirmed = await dialogService.DisplayConfirmationAsync(
+                "Load Game",
+                "Load this saved game? Your current progress will be saved.",
+                "Load",
+                "Cancel"
+            );
+
+            if (!confirmed)
+            {
+                return;
+            }
+
             try
             {
                 // Save current challenge if one is loaded

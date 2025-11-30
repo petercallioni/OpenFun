@@ -477,6 +477,28 @@
                                                 WidthRequest="60"
                                                 Background="Green"
                                                 Grid.Column="0">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="VisualStateManager.VisualStateGroups">
+                                                            <VisualStateGroupList>
+                                                                <VisualStateGroup x:Name="CommonStates">
+                                                                    <VisualState x:Name="Normal" />
+                                                                    <VisualState x:Name="PointerOver">
+                                                                        <VisualState.Setters>
+                                                                            <Setter Property="Background" Value="#7EFF4D" />
+                                                                        </VisualState.Setters>
+                                                                    </VisualState>
+                                                                    <VisualState x:Name="Pressed">
+                                                                        <VisualState.Setters>
+                                                                            <Setter Property="Background" Value="#085F00" />
+                                                                            <Setter Property="Scale" Value="0.98" />
+                                                                        </VisualState.Setters>
+                                                                    </VisualState>
+                                                                </VisualStateGroup>
+                                                            </VisualStateGroupList>
+                                                        </Setter>
+                                                    </Style>
+                                                </Border.Style>
                                                 <Image Source="file_import.png"
                                                    Aspect="Fill">
                                                     <Image.GestureRecognizers>
@@ -491,6 +513,28 @@
                                                 WidthRequest="60"
                                                 Grid.Column="1"
                                                 Background="Red">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="VisualStateManager.VisualStateGroups">
+                                                            <VisualStateGroupList>
+                                                                <VisualStateGroup x:Name="CommonStates">
+                                                                    <VisualState x:Name="Normal" />
+                                                                    <VisualState x:Name="PointerOver">
+                                                                        <VisualState.Setters>
+                                                                            <Setter Property="Background" Value="#FFF400" />
+                                                                        </VisualState.Setters>
+                                                                    </VisualState>
+                                                                    <VisualState x:Name="Pressed">
+                                                                        <VisualState.Setters>
+                                                                            <Setter Property="Background" Value="#BBA700" />
+                                                                            <Setter Property="Scale" Value="0.98" />
+                                                                        </VisualState.Setters>
+                                                                    </VisualState>
+                                                                </VisualStateGroup>
+                                                            </VisualStateGroupList>
+                                                        </Setter>
+                                                    </Style>
+                                                </Border.Style>
                                                 <Image Source="garbage_can.png"
                                                           Aspect="Fill">
                                                     <Image.GestureRecognizers>
