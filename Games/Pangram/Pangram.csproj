@@ -24,7 +24,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<MauiImage Include="Resources\Images\game_pangram_icon.svg" />
+		<MauiImage Include="Resources\Images\chevron_down_circled.svg" BaseSize="40,40"/>
+		<MauiImage Include="Resources\Images\chevron_left_circled.svg" BaseSize="40,40"/>
+		<MauiImage Include="Resources\Images\chevron_right_circled.svg" BaseSize="40,40"/>
+		<MauiImage Include="Resources\Images\chevron_up_circled.svg" BaseSize="40,40"/>
+		<MauiImage Include="Resources\Images\file_export.svg"/>
+		<MauiImage Include="Resources\Images\file_import.svg" BaseSize="60,60"/>
+		<MauiImage Include="Resources\Images\game_pangram_icon.svg"/>
+		<MauiImage Include="Resources\Images\garbage_can.svg" BaseSize="60,60"/>
 	</ItemGroup>
 
 	<ItemGroup>

@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Pangram.Models;
 
 namespace Pangram.PageModels
@@ -28,5 +29,11 @@ namespace Pangram.PageModels
         }
 
         public PangramData PangramData { get => pangramData; }
+
+        [RelayCommand]
+        private void ToggleVisibility()
+        {
+            IsVisible = !IsVisible;
+        }
     }
 }

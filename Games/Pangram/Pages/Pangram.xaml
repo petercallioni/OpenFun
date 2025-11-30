@@ -98,7 +98,7 @@
             <gconverters:FirstCharacterConverter x:Key="FirstCharacterConverter" />
             <gconverters:RemainingCharactersConverter x:Key="RemainingCharactersConverter" />
         </ResourceDictionary>
-        
+
     </ContentPage.Resources>
 
 
@@ -109,7 +109,7 @@
             VerticalOptions="Center" 
             HorizontalOptions="Center"
             Grid.Row="0"/>-->
-        
+
         <HorizontalStackLayout 
             HorizontalOptions="Center" 
             VerticalOptions="Center"
@@ -128,7 +128,7 @@
                     TextColor="Black"
                     BackgroundColor="Azure">
                 </Button>
-                
+
                 <Border
                     Background="Gray"
                     Margin="0,5,0,0"
@@ -185,7 +185,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    
+
                     <Button
                         Text="{Binding Sidebar.DisplayText}"
                         Command="{Binding Sidebar.ToggleVisibilityCommand}"
@@ -212,7 +212,7 @@
 
                 </Grid>
 
-                
+
                 <HorizontalStackLayout HorizontalOptions="Center"
                                        Margin="0,20,0,0">
                     <Button
@@ -227,7 +227,7 @@
                         IsEnabled="{Binding Loading.HasLoaded}"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveLetterCommand}">
                     </Button>
-                    
+
                     <Button
                         Margin="20,0,0,0"
                         WidthRequest="80"
@@ -341,7 +341,7 @@
                     Style="{StaticResource PressableButtonStyle}"
                     Margin="10,0,0,20">
                 </Button>
-                
+
                 <HorizontalStackLayout HorizontalOptions="Center">
                     <Button
                         Text="Random"
@@ -400,50 +400,107 @@
                     <ListView ItemsSource="{Binding History.PangramHistory}"
                               HorizontalOptions="Start">
                         <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="pageModels:PangramDataVM">
+                            <DataTemplate>
                                 <ViewCell>
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
 
-                                        <Label 
-                                            Text="{Binding Source={RelativeSource Mode=FindAncestorBindingContext, AncestorType={x:Type pageModels:PangramDataVM}},
-                                            Path=PangramData.Date, 
-                                            Converter={StaticResource DateTimeToStringConverter}}" 
-                                            FontSize="15" 
-                                            TextColor="White" 
-                                            VerticalOptions="Center" 
-                                            HorizontalOptions="Start" 
-                                            Padding="0,0,0,0" 
-                                            Grid.Row="0"
-                                            Grid.Column="0"/>
 
-                                        <Label 
-                                            VerticalOptions="Center" 
-                                            HorizontalOptions="End" 
-                                            Padding="0,0,0,0"
-                                            Grid.Row="0"
-                                            FontFamily="IBMPlexMonoRegular"
-                                            Grid.Column="1">
-                                            <Label.FormattedText>
-                                                <FormattedString>
-                                                    <Span Text="{Binding Source={RelativeSource Mode=FindAncestorBindingContext, AncestorType={x:Type pageModels:PangramDataVM}},
-                                                        Path=PangramData.LetterSequence, 
-                                                        Converter={StaticResource FirstCharacterConverter}}" 
-                                                          TextColor="Orange" FontAttributes="Bold" FontSize="15" FontFamily="IBMPlexMonoRegular"/>
-                                                    <Span Text="{Binding Source={RelativeSource Mode=FindAncestorBindingContext, AncestorType={x:Type pageModels:PangramDataVM}},
-                                                        Path=PangramData.LetterSequence, 
-                                                        Converter={StaticResource RemainingCharactersConverter}}" 
-                                                          TextColor="White" FontSize="15" FontFamily="IBMPlexMonoRegular"/>
-                                                </FormattedString>
-                                            </Label.FormattedText>
-                                        </Label>
+                                        <Grid
+                                            Grid.Row="0">
+
+                                            <Grid.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding ToggleVisibilityCommand}"/>
+                                            </Grid.GestureRecognizers>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="30" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Label 
+                                                Text="{Binding PangramData.Date, Converter={StaticResource DateTimeToStringConverter}}" 
+                                                FontSize="15" 
+                                                TextColor="White" 
+                                                VerticalOptions="Center" 
+                                                HorizontalOptions="Start" 
+                                                Padding="0,0,0,0" 
+                                                Grid.Row="0"
+                                                Grid.Column="0"/>
+
+                                            <Label 
+                                                VerticalOptions="Center" 
+                                                HorizontalOptions="End" 
+                                                Padding="0,0,0,0"
+                                                Grid.Row="0"
+                                                Grid.Column="1">
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="{Binding PangramData.LetterSequence, Converter={StaticResource FirstCharacterConverter}}" 
+                                                              TextColor="Orange" FontAttributes="Bold" FontSize="15" FontFamily="IBMPlexMonoRegular"/>
+                                                        <Span Text="{Binding PangramData.LetterSequence, Converter={StaticResource RemainingCharactersConverter}}" 
+                                                              TextColor="White" FontSize="15" FontFamily="IBMPlexMonoRegular"/>
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+
+                                            <Image Source="chevron_down_circled.png"
+                                                   Grid.Column="2"
+                                                   WidthRequest="20"
+                                                   IsVisible="{Binding IsVisible, Converter={StaticResource InvertedBoolConverter}}"/>
+
+                                            <Image Source="chevron_up_circled.png"
+                                                   Grid.Column="2"
+                                                   WidthRequest="20"
+                                                   IsVisible="{Binding IsVisible}"/>
+                                        </Grid>
+
+                                        <Grid
+                                            Padding="0,3,0,0"
+                                            Grid.Row="1"
+                                            IsVisible="{Binding IsVisible}">
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <Border
+                                                WidthRequest="60"
+                                                Background="Green"
+                                                Grid.Column="0">
+                                                <Image Source="file_import.png"
+                                                   Aspect="Fill">
+                                                    <Image.GestureRecognizers>
+                                                        <TapGestureRecognizer 
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.LoadGameCommand}"
+                                                            CommandParameter="{Binding PangramData}"/>
+                                                    </Image.GestureRecognizers>
+                                                </Image>
+                                            </Border>
+
+                                            <Border
+                                                WidthRequest="60"
+                                                Grid.Column="1"
+                                                Background="Red">
+                                                <Image Source="garbage_can.png"
+                                                          Aspect="Fill">
+                                                    <Image.GestureRecognizers>
+                                                        <TapGestureRecognizer 
+                                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteGameCommand}"
+                                                                CommandParameter="{Binding .}"/>
+                                                    </Image.GestureRecognizers>
+                                                </Image>
+                                            </Border>
+                                        </Grid>
                                     </Grid>
                                 </ViewCell>
                             </DataTemplate>

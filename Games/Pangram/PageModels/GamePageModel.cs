@@ -100,6 +100,13 @@ namespace Pangram.PageModels
         }
 
         [RelayCommand]
+        private void DeleteGame(PangramDataVM pangramDataVM)
+        {
+            History.PangramHistory.Remove(pangramDataVM);
+            _ = databaseService.DeleteAsync<PangramData>(pangramDataVM.PangramData.Id);
+        }
+
+        [RelayCommand]
         private async Task LoadGame(PangramData data)
         {
             try
