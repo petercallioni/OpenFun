@@ -169,7 +169,6 @@
             <Label
                     Text="{Binding LastGuess.Message}"
                     TextColor="{Binding LastGuess.Colour}"
-                    IsVisible="{Binding LastGuess.IsVisible}"
                     FontSize="15"
                     HorizontalOptions="Center"
                     Margin="0,5,0,10"/>
@@ -196,7 +195,7 @@
                 </Button>
 
                 <Button
-                        Text="History"
+                        Text="History" 
                         Command="{Binding History.ToggleVisibilityCommand}"
                         TextColor="Black"
                         BackgroundColor="Azure"
@@ -211,8 +210,7 @@
             <!-- SCORE -->
             <VerticalStackLayout 
         HorizontalOptions="Fill" 
-        VerticalOptions="Fill"
-        Margin="0,0,20,0">
+        VerticalOptions="Fill">
 
                 <Border
             Background="Gray"
@@ -241,18 +239,17 @@
 
             <!-- HISTORY -->
             <VerticalStackLayout 
-        HorizontalOptions="Fill" 
-        VerticalOptions="Fill"
-        Margin="20,0,0,0">
+                HorizontalOptions="Fill" 
+                VerticalOptions="Fill">
 
                 <Border
-            Background="Gray"
-            Margin="0,5,0,0"
-            Padding="5,0,5,0"
-            WidthRequest="200"
-            IsVisible="{Binding History.IsVisible}">
+                    Background="Gray"
+                    Margin="0,5,0,0"
+                    Padding="5,0,5,0"
+                    WidthRequest="200"
+                    IsVisible="{Binding History.IsVisible}">
                     <ListView ItemsSource="{Binding History.PangramHistory}"
-                      HorizontalOptions="Start">
+                        HorizontalOptions="Start">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
@@ -261,10 +258,9 @@
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
-
-
+                                        
                                         <Grid
-                                    Grid.Row="0">
+                                            Grid.Row="0">
 
                                             <Grid.GestureRecognizers>
                                                 <TapGestureRecognizer Command="{Binding ToggleVisibilityCommand}"/>
@@ -277,21 +273,21 @@
                                             </Grid.ColumnDefinitions>
 
                                             <Label 
-                                        Text="{Binding PangramData.Date, Converter={StaticResource DateTimeToStringConverter}}" 
-                                        FontSize="15" 
-                                        TextColor="White" 
-                                        VerticalOptions="Center" 
-                                        HorizontalOptions="Start" 
-                                        Padding="0,0,0,0" 
-                                        Grid.Row="0"
-                                        Grid.Column="0"/>
+                                                Text="{Binding PangramData.Date, Converter={StaticResource DateTimeToStringConverter}}" 
+                                                FontSize="15" 
+                                                TextColor="White" 
+                                                VerticalOptions="Center" 
+                                                HorizontalOptions="Start" 
+                                                Padding="0,0,0,0" 
+                                                Grid.Row="0"
+                                                Grid.Column="0"/>
 
                                             <Label 
-                                        VerticalOptions="Center" 
-                                        HorizontalOptions="End" 
-                                        Padding="0,0,0,0"
-                                        Grid.Row="0"
-                                        Grid.Column="1">
+                                                VerticalOptions="Center" 
+                                                HorizontalOptions="End" 
+                                                Padding="0,0,0,0"
+                                                Grid.Row="0"
+                                                Grid.Column="1">
                                                 <Label.FormattedText>
                                                     <FormattedString>
                                                         <Span Text="{Binding PangramData.LetterSequence, Converter={StaticResource FirstCharacterConverter}}" 
@@ -303,20 +299,20 @@
                                             </Label>
 
                                             <Image Source="chevron_down_circled.png"
-                                           Grid.Column="2"
-                                           WidthRequest="20"
-                                           IsVisible="{Binding IsVisible, Converter={StaticResource InvertedBoolConverter}}"/>
+                                               Grid.Column="2"
+                                               WidthRequest="20"
+                                               IsVisible="{Binding IsVisible, Converter={StaticResource InvertedBoolConverter}}"/>
 
                                             <Image Source="chevron_up_circled.png"
-                                           Grid.Column="2"
-                                           WidthRequest="20"
-                                           IsVisible="{Binding IsVisible}"/>
+                                               Grid.Column="2"
+                                               WidthRequest="20"
+                                               IsVisible="{Binding IsVisible}"/>
                                         </Grid>
 
                                         <Grid
-                                    Padding="0,3,0,0"
-                                    Grid.Row="1"
-                                    IsVisible="{Binding IsVisible}">
+                                            Padding="0,3,0,0"
+                                            Grid.Row="1"
+                                            IsVisible="{Binding IsVisible}">
 
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
@@ -328,9 +324,10 @@
                                             </Grid.RowDefinitions>
 
                                             <Border
-                                        WidthRequest="60"
-                                        Background="Green"
-                                        Grid.Column="0">
+                                                WidthRequest="60"
+                                                HeightRequest="60"
+                                                Background="Green"
+                                                Grid.Column="0">
                                                 <Border.Style>
                                                     <Style TargetType="Border">
                                                         <Setter Property="VisualStateManager.VisualStateGroups">
@@ -354,7 +351,7 @@
                                                     </Style>
                                                 </Border.Style>
                                                 <Image Source="file_import.png"
-                                           Aspect="Fill">
+                                                     Aspect="Fill">
                                                     <Image.GestureRecognizers>
                                                         <TapGestureRecognizer 
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.LoadGameCommand}"
@@ -365,6 +362,7 @@
 
                                             <Border
                                         WidthRequest="60"
+                                        HeightRequest="60"
                                         Grid.Column="1"
                                         Background="Red">
                                                 <Border.Style>
@@ -415,36 +413,6 @@
                         <Binding Path="History.IsVisible" Converter="{StaticResource InvertedBoolConverter}" />
                     </MultiBinding>
                 </VerticalStackLayout.IsVisible>
-                <HorizontalStackLayout HorizontalOptions="Center"
-                                       Margin="0,20,0,0">
-                    <Button
-                        Margin="0,0,20,0"
-                        WidthRequest="80"
-                        HeightRequest="20"
-                        FontSize="16"
-                        VerticalOptions="Center"
-                        Text="Back"
-                        BackgroundColor="Red"
-                        TextColor="White"
-                        Style="{StaticResource PressableButtonStyle}"
-                        IsEnabled="{Binding Loading.HasLoaded}"
-                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveLetterCommand}">
-                    </Button>
-
-                    <Button
-                        Margin="20,0,0,0"
-                        WidthRequest="80"
-                        HeightRequest="20"
-                        VerticalOptions="Center"
-                        FontSize="16"
-                        Text="Submit"
-                        BackgroundColor="Green"
-                        TextColor="White"
-                        Style="{StaticResource PressableButtonStyle}"
-                        IsEnabled="{Binding Loading.HasLoaded}"
-                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SubmitWordCommand}">
-                    </Button>
-                </HorizontalStackLayout>
 
                 <AbsoluteLayout WidthRequest="275" 
                                 HeightRequest="250" 
@@ -535,6 +503,37 @@
                         </Button.Clip>
                     </Button>
                 </AbsoluteLayout>
+
+                <HorizontalStackLayout HorizontalOptions="Center"
+                                       Margin="0,0,0,20">
+                    <Button
+                        Margin="0,0,20,0"
+                        WidthRequest="80"
+                        HeightRequest="20"
+                        FontSize="16"
+                        VerticalOptions="Center"
+                        Text="Back"
+                        BackgroundColor="Red"
+                        TextColor="White"
+                        Style="{StaticResource PressableButtonStyle}"
+                        IsEnabled="{Binding Loading.HasLoaded}"
+                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveLetterCommand}">
+                    </Button>
+
+                    <Button
+                        Margin="20,0,0,0"
+                        WidthRequest="80"
+                        HeightRequest="20"
+                        VerticalOptions="Center"
+                        FontSize="16"
+                        Text="Submit"
+                        BackgroundColor="Green"
+                        TextColor="White"
+                        Style="{StaticResource PressableButtonStyle}"
+                        IsEnabled="{Binding Loading.HasLoaded}"
+                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SubmitWordCommand}">
+                    </Button>
+                </HorizontalStackLayout>
 
                 <Button
                     Text="Shuffle"
