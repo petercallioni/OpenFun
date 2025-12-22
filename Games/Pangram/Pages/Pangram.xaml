@@ -98,6 +98,8 @@
             <gconverters:FirstCharacterConverter x:Key="FirstCharacterConverter" />
             <gconverters:RemainingCharactersConverter x:Key="RemainingCharactersConverter" />
             <gconverters:IsStringNotNullOrEmptyConverter x:Key="IsStringNotNullOrEmptyConverter" />
+            <gconverters:BooleanOrConverter x:Key="BooleanOrConverter" />
+            <gconverters:BooleanAndConverter x:Key="BooleanAndConverter" />
         </ResourceDictionary>
 
     </ContentPage.Resources>
@@ -106,50 +108,11 @@
             VerticalOptions="Center"
             Grid.Row="1">
 
-        <VerticalStackLayout 
-                HorizontalOptions="Fill" 
-                VerticalOptions="Fill"
-                Margin="0,0,20,0">
-
-            <Button
-                    Text="{Binding Sidebar.DisplayText}"
-                    Command="{Binding Sidebar.ToggleVisibilityCommand}"
-                    IsVisible="{Binding Sidebar.IsVisible}"
-                    Style="{StaticResource PressableButtonStyle}"
-                    TextColor="Black"
-                    BackgroundColor="Azure">
-            </Button>
-
-            <Border
-                    Background="Gray"
-                    Margin="0,5,0,0"
-                    Padding="5,0,5,0"
-                    WidthRequest="200"
-                    IsVisible="{Binding Sidebar.IsVisible}">
-                <ListView ItemsSource="{Binding GuessedWords}"
-                              HorizontalOptions="Start">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <Label 
-                                        Text="{Binding .}" 
-                                        FontSize="15" 
-                                        TextColor="White" 
-                                        VerticalOptions="Center" 
-                                        HorizontalOptions="Center" 
-                                        Padding="0,0,0,0" />
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </Border>
-        </VerticalStackLayout>
-
         <VerticalStackLayout >
             <Grid
                 HorizontalOptions="Center"
                 Margin="0,0,0,10">
-                
+
                 <Grid.RowDefinitions>
                     <RowDefinition Height="60"/>
                 </Grid.RowDefinitions>
@@ -224,7 +187,6 @@
                 <Button
                         Text="{Binding Sidebar.DisplayText}"
                         Command="{Binding Sidebar.ToggleVisibilityCommand}"
-                        IsVisible="{Binding Sidebar.IsVisible, Converter={StaticResource InvertedBoolConverter}}"
                         TextColor="Black"
                         BackgroundColor="Azure"
                         Style="{StaticResource PressableButtonStyle}"
@@ -236,7 +198,6 @@
                 <Button
                         Text="History"
                         Command="{Binding History.ToggleVisibilityCommand}"
-                        IsVisible="{Binding History.IsVisible, Converter={StaticResource InvertedBoolConverter}}"
                         TextColor="Black"
                         BackgroundColor="Azure"
                         Style="{StaticResource PressableButtonStyle}"
@@ -247,10 +208,216 @@
 
             </Grid>
 
+            <!-- SCORE -->
+            <VerticalStackLayout 
+        HorizontalOptions="Fill" 
+        VerticalOptions="Fill"
+        Margin="0,0,20,0">
 
-            <HorizontalStackLayout HorizontalOptions="Center"
+                <Border
+            Background="Gray"
+            Margin="0,5,0,0"
+            Padding="5,0,5,0"
+            WidthRequest="200"
+            IsVisible="{Binding Sidebar.IsVisible}">
+                    <ListView ItemsSource="{Binding GuessedWords}"
+                      HorizontalOptions="Start">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Label 
+                                Text="{Binding .}" 
+                                FontSize="15" 
+                                TextColor="White" 
+                                VerticalOptions="Center" 
+                                HorizontalOptions="Center" 
+                                Padding="0,0,0,0" />
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- HISTORY -->
+            <VerticalStackLayout 
+        HorizontalOptions="Fill" 
+        VerticalOptions="Fill"
+        Margin="20,0,0,0">
+
+                <Border
+            Background="Gray"
+            Margin="0,5,0,0"
+            Padding="5,0,5,0"
+            WidthRequest="200"
+            IsVisible="{Binding History.IsVisible}">
+                    <ListView ItemsSource="{Binding History.PangramHistory}"
+                      HorizontalOptions="Start">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+
+                                        <Grid
+                                    Grid.Row="0">
+
+                                            <Grid.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding ToggleVisibilityCommand}"/>
+                                            </Grid.GestureRecognizers>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="30" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Label 
+                                        Text="{Binding PangramData.Date, Converter={StaticResource DateTimeToStringConverter}}" 
+                                        FontSize="15" 
+                                        TextColor="White" 
+                                        VerticalOptions="Center" 
+                                        HorizontalOptions="Start" 
+                                        Padding="0,0,0,0" 
+                                        Grid.Row="0"
+                                        Grid.Column="0"/>
+
+                                            <Label 
+                                        VerticalOptions="Center" 
+                                        HorizontalOptions="End" 
+                                        Padding="0,0,0,0"
+                                        Grid.Row="0"
+                                        Grid.Column="1">
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="{Binding PangramData.LetterSequence, Converter={StaticResource FirstCharacterConverter}}" 
+                                                      TextColor="Orange" FontAttributes="Bold" FontSize="15" FontFamily="IBMPlexMonoRegular"/>
+                                                        <Span Text="{Binding PangramData.LetterSequence, Converter={StaticResource RemainingCharactersConverter}}" 
+                                                      TextColor="White" FontSize="15" FontFamily="IBMPlexMonoRegular"/>
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+
+                                            <Image Source="chevron_down_circled.png"
+                                           Grid.Column="2"
+                                           WidthRequest="20"
+                                           IsVisible="{Binding IsVisible, Converter={StaticResource InvertedBoolConverter}}"/>
+
+                                            <Image Source="chevron_up_circled.png"
+                                           Grid.Column="2"
+                                           WidthRequest="20"
+                                           IsVisible="{Binding IsVisible}"/>
+                                        </Grid>
+
+                                        <Grid
+                                    Padding="0,3,0,0"
+                                    Grid.Row="1"
+                                    IsVisible="{Binding IsVisible}">
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <Border
+                                        WidthRequest="60"
+                                        Background="Green"
+                                        Grid.Column="0">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="VisualStateManager.VisualStateGroups">
+                                                            <VisualStateGroupList>
+                                                                <VisualStateGroup x:Name="CommonStates">
+                                                                    <VisualState x:Name="Normal" />
+                                                                    <VisualState x:Name="PointerOver">
+                                                                        <VisualState.Setters>
+                                                                            <Setter Property="Background" Value="#7EFF4D" />
+                                                                        </VisualState.Setters>
+                                                                    </VisualState>
+                                                                    <VisualState x:Name="Pressed">
+                                                                        <VisualState.Setters>
+                                                                            <Setter Property="Background" Value="#085F00" />
+                                                                            <Setter Property="Scale" Value="0.98" />
+                                                                        </VisualState.Setters>
+                                                                    </VisualState>
+                                                                </VisualStateGroup>
+                                                            </VisualStateGroupList>
+                                                        </Setter>
+                                                    </Style>
+                                                </Border.Style>
+                                                <Image Source="file_import.png"
+                                           Aspect="Fill">
+                                                    <Image.GestureRecognizers>
+                                                        <TapGestureRecognizer 
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.LoadGameCommand}"
+                                                    CommandParameter="{Binding PangramData}"/>
+                                                    </Image.GestureRecognizers>
+                                                </Image>
+                                            </Border>
+
+                                            <Border
+                                        WidthRequest="60"
+                                        Grid.Column="1"
+                                        Background="Red">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="VisualStateManager.VisualStateGroups">
+                                                            <VisualStateGroupList>
+                                                                <VisualStateGroup x:Name="CommonStates">
+                                                                    <VisualState x:Name="Normal" />
+                                                                    <VisualState x:Name="PointerOver">
+                                                                        <VisualState.Setters>
+                                                                            <Setter Property="Background" Value="#FFF400" />
+                                                                        </VisualState.Setters>
+                                                                    </VisualState>
+                                                                    <VisualState x:Name="Pressed">
+                                                                        <VisualState.Setters>
+                                                                            <Setter Property="Background" Value="#BBA700" />
+                                                                            <Setter Property="Scale" Value="0.98" />
+                                                                        </VisualState.Setters>
+                                                                    </VisualState>
+                                                                </VisualStateGroup>
+                                                            </VisualStateGroupList>
+                                                        </Setter>
+                                                    </Style>
+                                                </Border.Style>
+                                                <Image Source="garbage_can.png"
+                                                  Aspect="Fill">
+                                                    <Image.GestureRecognizers>
+                                                        <TapGestureRecognizer 
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteGameCommand}"
+                                                        CommandParameter="{Binding .}"/>
+                                                    </Image.GestureRecognizers>
+                                                </Image>
+                                            </Border>
+                                        </Grid>
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- MAIN -->
+            <VerticalStackLayout>
+                <VerticalStackLayout.IsVisible>
+                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                        <Binding Path="Sidebar.IsVisible" Converter="{StaticResource InvertedBoolConverter}"/>
+                        <Binding Path="History.IsVisible" Converter="{StaticResource InvertedBoolConverter}" />
+                    </MultiBinding>
+                </VerticalStackLayout.IsVisible>
+                <HorizontalStackLayout HorizontalOptions="Center"
                                        Margin="0,20,0,0">
-                <Button
+                    <Button
                         Margin="0,0,20,0"
                         WidthRequest="80"
                         HeightRequest="20"
@@ -262,9 +429,9 @@
                         Style="{StaticResource PressableButtonStyle}"
                         IsEnabled="{Binding Loading.HasLoaded}"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveLetterCommand}">
-                </Button>
+                    </Button>
 
-                <Button
+                    <Button
                         Margin="20,0,0,0"
                         WidthRequest="80"
                         HeightRequest="20"
@@ -276,100 +443,100 @@
                         Style="{StaticResource PressableButtonStyle}"
                         IsEnabled="{Binding Loading.HasLoaded}"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SubmitWordCommand}">
-                </Button>
-            </HorizontalStackLayout>
+                    </Button>
+                </HorizontalStackLayout>
 
-            <AbsoluteLayout WidthRequest="275" 
+                <AbsoluteLayout WidthRequest="275" 
                                 HeightRequest="250" 
                                 Margin="0,20,0,20" 
                                 HorizontalOptions="Center" 
                                 Background="Transparent">
-                <!-- top-left -->
-                <Button Style="{StaticResource HexButtonStyle}" 
+                    <!-- top-left -->
+                    <Button Style="{StaticResource HexButtonStyle}" 
           Text="{Binding OtherCharacters[0]}"
           Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.AddLetterCommand}"
           CommandParameter="{Binding OtherCharacters[0]}"
           AbsoluteLayout.LayoutBounds="44,0,100,100"
           AbsoluteLayout.LayoutFlags="None">
-                    <Button.Clip>
-                        <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
-                    </Button.Clip>
-                </Button>
+                        <Button.Clip>
+                            <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
+                        </Button.Clip>
+                    </Button>
 
-                <!-- top-right -->
-                <Button Style="{StaticResource HexButtonStyle}"
+                    <!-- top-right -->
+                    <Button Style="{StaticResource HexButtonStyle}"
           Text="{Binding OtherCharacters[1]}"
           Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.AddLetterCommand}"
           CommandParameter="{Binding OtherCharacters[1]}"
           AbsoluteLayout.LayoutBounds="134,0,100,100"
           AbsoluteLayout.LayoutFlags="None">
-                    <Button.Clip>
-                        <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
-                    </Button.Clip>
-                </Button>
+                        <Button.Clip>
+                            <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
+                        </Button.Clip>
+                    </Button>
 
-                <!-- left middle -->
-                <Button Style="{StaticResource HexButtonStyle}"
+                    <!-- left middle -->
+                    <Button Style="{StaticResource HexButtonStyle}"
           Text="{Binding OtherCharacters[2]}"
           Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.AddLetterCommand}"
           CommandParameter="{Binding OtherCharacters[2]}"
           AbsoluteLayout.LayoutBounds="0,74,100,100"
           AbsoluteLayout.LayoutFlags="None">
-                    <Button.Clip>
-                        <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
-                    </Button.Clip>
-                </Button>
+                        <Button.Clip>
+                            <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
+                        </Button.Clip>
+                    </Button>
 
-                <!-- center -->
-                <Button Style="{StaticResource CenterHexButtonStyle}"
+                    <!-- center -->
+                    <Button Style="{StaticResource CenterHexButtonStyle}"
           Text="{Binding PrimeCharacter}"
           Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.AddLetterCommand}"
           CommandParameter="{Binding PrimeCharacter}"
           AbsoluteLayout.LayoutBounds="89,74,100,100"
           AbsoluteLayout.LayoutFlags="None">
-                    <Button.Clip>
-                        <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
-                    </Button.Clip>
-                </Button>
+                        <Button.Clip>
+                            <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
+                        </Button.Clip>
+                    </Button>
 
-                <!-- right middle -->
-                <Button Style="{StaticResource HexButtonStyle}"
+                    <!-- right middle -->
+                    <Button Style="{StaticResource HexButtonStyle}"
           Text="{Binding OtherCharacters[3]}"
           Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.AddLetterCommand}"
           CommandParameter="{Binding OtherCharacters[3]}"
           AbsoluteLayout.LayoutBounds="178,74,100,100"
           AbsoluteLayout.LayoutFlags="None">
-                    <Button.Clip>
-                        <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
-                    </Button.Clip>
-                </Button>
+                        <Button.Clip>
+                            <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
+                        </Button.Clip>
+                    </Button>
 
-                <!-- bottom-left -->
-                <Button Style="{StaticResource HexButtonStyle}"
+                    <!-- bottom-left -->
+                    <Button Style="{StaticResource HexButtonStyle}"
           Text="{Binding OtherCharacters[4]}"
           Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.AddLetterCommand}"
           CommandParameter="{Binding OtherCharacters[4]}"
           AbsoluteLayout.LayoutBounds="44,147,100,100"
           AbsoluteLayout.LayoutFlags="None">
-                    <Button.Clip>
-                        <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
-                    </Button.Clip>
-                </Button>
+                        <Button.Clip>
+                            <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
+                        </Button.Clip>
+                    </Button>
 
-                <!-- bottom-right -->
-                <Button Style="{StaticResource HexButtonStyle}"
+                    <!-- bottom-right -->
+                    <Button Style="{StaticResource HexButtonStyle}"
           Text="{Binding OtherCharacters[5]}"
           Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.AddLetterCommand}"
           CommandParameter="{Binding OtherCharacters[5]}"
           AbsoluteLayout.LayoutBounds="134,147,100,100"
           AbsoluteLayout.LayoutFlags="None">
-                    <Button.Clip>
-                        <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
-                    </Button.Clip>
-                </Button>
-            </AbsoluteLayout>
+                        <Button.Clip>
+                            <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
+                        </Button.Clip>
+                    </Button>
+                </AbsoluteLayout>
 
-            <Button
+                <Button
                     Text="Shuffle"
                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.JumbleLettersCommand}"
                     IsEnabled="{Binding Loading.HasLoaded}"
@@ -378,10 +545,10 @@
                     BackgroundColor="Azure"
                     Style="{StaticResource PressableButtonStyle}"
                     Margin="10,0,0,20">
-            </Button>
+                </Button>
 
-            <HorizontalStackLayout HorizontalOptions="Center">
-                <Button
+                <HorizontalStackLayout HorizontalOptions="Center">
+                    <Button
                         Text="Random"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.NewGameCommand}"
                         CommandParameter="{x:Static sys:Boolean.FalseString}"
@@ -391,9 +558,9 @@
                         BackgroundColor="Azure"
                         Style="{StaticResource PressableButtonStyle}"
                         Margin="0,0,10,0">
-                </Button>
+                    </Button>
 
-                <Button
+                    <Button
                         Text="Daily"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.NewGameCommand}"
                         CommandParameter="{x:Static sys:Boolean.TrueString}"
@@ -403,192 +570,18 @@
                         BackgroundColor="Azure"
                         Style="{StaticResource PressableButtonStyle}"
                         Margin="10,0,0,0">
-                </Button>
-            </HorizontalStackLayout>
+                    </Button>
+                </HorizontalStackLayout>
 
-            <Label
+                <Label
                     HorizontalOptions="Center"
                     Margin="0,5,0,0"
                     IsVisible="{Binding Loading.IsLoading}"
                     TextColor="Green">
-                Loading ...
-            </Label>
-        </VerticalStackLayout>
+                    Loading ...
+                </Label>
+            </VerticalStackLayout>
 
-        <VerticalStackLayout 
-                HorizontalOptions="Fill" 
-                VerticalOptions="Fill"
-                Margin="20,0,0,0">
-
-            <Button
-                    Text="History"
-                    Command="{Binding History.ToggleVisibilityCommand}"
-                    IsVisible="{Binding History.IsVisible}"
-                    Style="{StaticResource PressableButtonStyle}"
-                    TextColor="Black"
-                    BackgroundColor="Azure">
-            </Button>
-
-            <Border
-                    Background="Gray"
-                    Margin="0,5,0,0"
-                    Padding="5,0,5,0"
-                    WidthRequest="200"
-                    IsVisible="{Binding History.IsVisible}">
-                <ListView ItemsSource="{Binding History.PangramHistory}"
-                              HorizontalOptions="Start">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-
-
-                                    <Grid
-                                            Grid.Row="0">
-
-                                        <Grid.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding ToggleVisibilityCommand}"/>
-                                        </Grid.GestureRecognizers>
-
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="30" />
-                                        </Grid.ColumnDefinitions>
-
-                                        <Label 
-                                                Text="{Binding PangramData.Date, Converter={StaticResource DateTimeToStringConverter}}" 
-                                                FontSize="15" 
-                                                TextColor="White" 
-                                                VerticalOptions="Center" 
-                                                HorizontalOptions="Start" 
-                                                Padding="0,0,0,0" 
-                                                Grid.Row="0"
-                                                Grid.Column="0"/>
-
-                                        <Label 
-                                                VerticalOptions="Center" 
-                                                HorizontalOptions="End" 
-                                                Padding="0,0,0,0"
-                                                Grid.Row="0"
-                                                Grid.Column="1">
-                                            <Label.FormattedText>
-                                                <FormattedString>
-                                                    <Span Text="{Binding PangramData.LetterSequence, Converter={StaticResource FirstCharacterConverter}}" 
-                                                              TextColor="Orange" FontAttributes="Bold" FontSize="15" FontFamily="IBMPlexMonoRegular"/>
-                                                    <Span Text="{Binding PangramData.LetterSequence, Converter={StaticResource RemainingCharactersConverter}}" 
-                                                              TextColor="White" FontSize="15" FontFamily="IBMPlexMonoRegular"/>
-                                                </FormattedString>
-                                            </Label.FormattedText>
-                                        </Label>
-
-                                        <Image Source="chevron_down_circled.png"
-                                                   Grid.Column="2"
-                                                   WidthRequest="20"
-                                                   IsVisible="{Binding IsVisible, Converter={StaticResource InvertedBoolConverter}}"/>
-
-                                        <Image Source="chevron_up_circled.png"
-                                                   Grid.Column="2"
-                                                   WidthRequest="20"
-                                                   IsVisible="{Binding IsVisible}"/>
-                                    </Grid>
-
-                                    <Grid
-                                            Padding="0,3,0,0"
-                                            Grid.Row="1"
-                                            IsVisible="{Binding IsVisible}">
-
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-
-                                        <Border
-                                                WidthRequest="60"
-                                                Background="Green"
-                                                Grid.Column="0">
-                                            <Border.Style>
-                                                <Style TargetType="Border">
-                                                    <Setter Property="VisualStateManager.VisualStateGroups">
-                                                        <VisualStateGroupList>
-                                                            <VisualStateGroup x:Name="CommonStates">
-                                                                <VisualState x:Name="Normal" />
-                                                                <VisualState x:Name="PointerOver">
-                                                                    <VisualState.Setters>
-                                                                        <Setter Property="Background" Value="#7EFF4D" />
-                                                                    </VisualState.Setters>
-                                                                </VisualState>
-                                                                <VisualState x:Name="Pressed">
-                                                                    <VisualState.Setters>
-                                                                        <Setter Property="Background" Value="#085F00" />
-                                                                        <Setter Property="Scale" Value="0.98" />
-                                                                    </VisualState.Setters>
-                                                                </VisualState>
-                                                            </VisualStateGroup>
-                                                        </VisualStateGroupList>
-                                                    </Setter>
-                                                </Style>
-                                            </Border.Style>
-                                            <Image Source="file_import.png"
-                                                   Aspect="Fill">
-                                                <Image.GestureRecognizers>
-                                                    <TapGestureRecognizer 
-                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.LoadGameCommand}"
-                                                            CommandParameter="{Binding PangramData}"/>
-                                                </Image.GestureRecognizers>
-                                            </Image>
-                                        </Border>
-
-                                        <Border
-                                                WidthRequest="60"
-                                                Grid.Column="1"
-                                                Background="Red">
-                                            <Border.Style>
-                                                <Style TargetType="Border">
-                                                    <Setter Property="VisualStateManager.VisualStateGroups">
-                                                        <VisualStateGroupList>
-                                                            <VisualStateGroup x:Name="CommonStates">
-                                                                <VisualState x:Name="Normal" />
-                                                                <VisualState x:Name="PointerOver">
-                                                                    <VisualState.Setters>
-                                                                        <Setter Property="Background" Value="#FFF400" />
-                                                                    </VisualState.Setters>
-                                                                </VisualState>
-                                                                <VisualState x:Name="Pressed">
-                                                                    <VisualState.Setters>
-                                                                        <Setter Property="Background" Value="#BBA700" />
-                                                                        <Setter Property="Scale" Value="0.98" />
-                                                                    </VisualState.Setters>
-                                                                </VisualState>
-                                                            </VisualStateGroup>
-                                                        </VisualStateGroupList>
-                                                    </Setter>
-                                                </Style>
-                                            </Border.Style>
-                                            <Image Source="garbage_can.png"
-                                                          Aspect="Fill">
-                                                <Image.GestureRecognizers>
-                                                    <TapGestureRecognizer 
-                                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteGameCommand}"
-                                                                CommandParameter="{Binding .}"/>
-                                                </Image.GestureRecognizers>
-                                            </Image>
-                                        </Border>
-                                    </Grid>
-                                </Grid>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </Border>
         </VerticalStackLayout>
     </HorizontalStackLayout>
 </ContentPage>
