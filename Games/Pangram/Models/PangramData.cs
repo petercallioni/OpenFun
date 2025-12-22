@@ -55,10 +55,10 @@ namespace Pangram.Models
         {
             string letterSequence = new string(gameModel!.WordLetterSequence!.Letters.ToArray()).ToUpper();
 
-            Date = DateTime.Now;
+            Date = gameModel.CreatedDate;
             LetterSequence = letterSequence;
             Word = gameModel.FoundPangramWord ?? gameModel.WordLetterSequence?.Word ?? string.Empty; // Should never be null here
-            GotPangram = gameModel.FoundPangramWord == null ? false : true;
+            GotPangram = !string.IsNullOrEmpty(gameModel.FoundPangramWord);
             IsDaily = gameModel.IsDaily;
             MaxScore = gameModel.MaxScore;
             SetGuessedWordsList(gameModel.GuessedWords ?? new List<string>());

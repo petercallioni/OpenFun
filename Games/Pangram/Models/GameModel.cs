@@ -10,6 +10,8 @@ namespace Pangram.Models
         private int score;
         private int maxScore;
         private bool isDaily;
+        private DateTime createdDate;
+
         private string? foundPangramWord;
 
         private IAppFileProvider appFileProvider;
@@ -21,6 +23,8 @@ namespace Pangram.Models
         public int MaxScore { get => maxScore; }
         public bool IsDaily { get => isDaily; }
         public string? FoundPangramWord { get => foundPangramWord; }
+        public DateTime CreatedDate { get => createdDate; }
+
         public GameModel(IAppFileProvider appFileProvider, IDailySeed dailySeed)
         {
             this.appFileProvider = appFileProvider;
@@ -32,12 +36,18 @@ namespace Pangram.Models
             score = 0;
         }
 
+        public void ForfeitGame()
+        {
+            foundPangramWord = wordLetterSequence!.Word;
+        }
+
         public async Task LoadSavedGame(PangramData data)
         {
             dictionaryCache ??= new DictionaryCache(appFileProvider);
             maxScore = data.MaxScore;
             words = data.GetGuessedWordsList();
             score = words.Count;
+            createdDate = data.Date;
 
             isDaily = data.IsDaily;
             await dictionaryCache.LoadDictionaryAsync();
@@ -58,6 +68,7 @@ namespace Pangram.Models
             maxScore = 0;
             score = 0;
             isDaily = daily;
+            createdDate = DateTime.UtcNow.Date;
 
             await dictionaryCache.LoadDictionaryAsync();
 

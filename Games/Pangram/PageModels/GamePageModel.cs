@@ -23,6 +23,9 @@ namespace Pangram.PageModels
         private readonly Loading loading = new Loading();
         private readonly History history = new History();
 
+        private bool canRevealWord;
+
+        private string foundPangramWord = string.Empty;
         private GuessWordResults lastGuessResult;
         private List<char> otherCharacters;
         private char primeCharacter;
@@ -86,9 +89,40 @@ namespace Pangram.PageModels
         public LastGuess LastGuess => lastGuess;
         public Loading Loading => loading;
         public History History => history;
+
+        public string FoundPangramWord
+        {
+            get => foundPangramWord;
+            set
+            {
+                if (foundPangramWord != value)
+                {
+                    foundPangramWord = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool CanRevealWord
+        {
+            get => canRevealWord;
+            set
+            {
+                if (canRevealWord != value)
+                {
+                    canRevealWord = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         private Task loadHistory;
 
-        public GamePageModel(ModalErrorHandler errorHandler, DatabaseService databaseService, DialogService dialogService)
+        public GamePageModel(
+            ModalErrorHandler errorHandler,
+            DatabaseService databaseService,
+            DialogService dialogService
+            )
         {
             this.errorHandler = errorHandler;
             this.databaseService = databaseService;
@@ -99,6 +133,25 @@ namespace Pangram.PageModels
             primeCharacter = '\0';
             gameModel = new GameModel(new MauiFileProvider(), new DailySeed());
             loadHistory = LoadHistory();
+            canRevealWord = false;
+        }
+
+        [RelayCommand]
+        private async Task RevealPangram()
+        {
+            bool confirmed = await dialogService.DisplayConfirmationAsync(
+                "Reveal Pangram",
+                "Are you sure you want to reveal the pangram? This will end your current game.",
+                "Reveal",
+                "Cancel"
+            );
+            if (confirmed)
+            {
+                gameModel.ForfeitGame();
+                CanRevealWord = false;
+                FoundPangramWord = gameModel.FoundPangramWord?.ToUpper() ?? string.Empty;
+                _ = SaveOrUpdateCurrentChallenge();
+            }
         }
 
         [RelayCommand]
@@ -148,14 +201,34 @@ namespace Pangram.PageModels
 
                 Loading.IsLoading = false;
                 Loading.HasLoaded = true;
+
+                if (data.GotPangram)
+                {
+                    FoundPangramWord = data.Word.ToUpper();
+                    CanRevealWord = false;
+                }
+                else
+                {
+                    FoundPangramWord = "";
+                    CanRevealWord = DateTime.UtcNow.AddDays(-1).Date >= data.Date.Date;
+                }
+
                 OtherCharacters = gameModel.WordLetterSequence!.Letters
                     .Skip(1)
                     .Select(x => char.ToUpper(x))
                     .ToList();
                 PrimeCharacter = char.ToUpper(gameModel.WordLetterSequence!.Letters[0]);
 
+                LastGuessResult = GuessWordResults.NONE;
+                lastGuess.SetLastGuess(LastGuessResult);
+
+                GuessedWords.Clear();
+                gameModel.GuessedWords?.ForEach(word => GuessedWords.Add(word.ToUpper()));
+
                 Sidebar.UpdateScore(gameModel.Score);
                 Sidebar.UpdateMaxScore(gameModel.MaxScore);
+
+                History.ClosePangramDetail(data);
             }
             catch (Exception ex)
             {
@@ -165,10 +238,6 @@ namespace Pangram.PageModels
             {
                 loading.IsLoading = false;
             }
-
-            GuessedWords.Clear();
-            Sidebar.UpdateScore(0);
-            Sidebar.UpdateMaxScore(await gameModel.FindMaxWords());
         }
 
 
@@ -212,6 +281,9 @@ namespace Pangram.PageModels
             {
                 loading.IsLoading = false;
             }
+
+            LastGuessResult = GuessWordResults.NONE;
+            lastGuess.SetLastGuess(LastGuessResult);
 
             GuessedWords.Clear();
             Sidebar.UpdateScore(0);
@@ -260,7 +332,13 @@ namespace Pangram.PageModels
 
                 CurrentWord = string.Empty;
 
+                if (gameModel?.FoundPangramWord != null)
+                {
+                    FoundPangramWord = gameModel.FoundPangramWord.ToUpper();
+                }
+
                 sidebar.UpdateScore(gameModel!.Score);
+                _ = SaveOrUpdateCurrentChallenge();
             }
 
             lastGuess.SetLastGuess(LastGuessResult);

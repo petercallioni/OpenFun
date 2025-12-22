@@ -70,5 +70,13 @@ namespace Pangram.Components
         {
             IsVisible = !IsVisible;
         }
+
+        public void ClosePangramDetail(PangramData data)
+        {
+            foreach (var item in pangramHistory.Where(x => x.PangramData.Id == data.Id))
+            {
+                item.IsVisible = false;
+            }
+        }
     }
 }
