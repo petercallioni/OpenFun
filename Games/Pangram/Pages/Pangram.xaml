@@ -103,12 +103,16 @@
         </ResourceDictionary>
 
     </ContentPage.Resources>
-    <HorizontalStackLayout 
-            HorizontalOptions="Center" 
-            VerticalOptions="Center"
-            Grid.Row="1">
-
-        <VerticalStackLayout >
+    <Grid
+        HorizontalOptions="Center">
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <VerticalStackLayout 
+            Grid.Row="0">
             <Grid
                 HorizontalOptions="Center"
                 Margin="0,0,0,10">
@@ -206,32 +210,37 @@
                 </Button>
 
             </Grid>
+            
+        </VerticalStackLayout>
 
+        <VerticalStackLayout
+            Grid.Row="1">
+            
             <!-- SCORE -->
             <VerticalStackLayout 
                 HorizontalOptions="Fill" 
-                VerticalOptions="Fill">
+                VerticalOptions="Fill"
+                WidthRequest="275" >
 
                 <Border
                     Background="Gray"
                     Margin="0,5,0,0"
                     Padding="5,0,5,0"
-                    WidthRequest="200"
                     VerticalOptions="Fill"
                     IsVisible="{Binding Sidebar.IsVisible}"
                     MaximumHeightRequest="400">
                     <ListView ItemsSource="{Binding GuessedWords}"
-                      HorizontalOptions="Start">
+                        HorizontalOptions="Start">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
                                     <Label 
-                                Text="{Binding .}" 
-                                FontSize="15" 
-                                TextColor="White" 
-                                VerticalOptions="Center" 
-                                HorizontalOptions="Center" 
-                                Padding="0,0,0,0" />
+                                        Text="{Binding .}" 
+                                        FontSize="15" 
+                                        TextColor="White" 
+                                        VerticalOptions="Center" 
+                                        HorizontalOptions="Center" 
+                                        Padding="0,0,0,0" />
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
@@ -242,13 +251,13 @@
             <!-- HISTORY -->
             <VerticalStackLayout 
                 HorizontalOptions="Fill" 
-                VerticalOptions="Fill">
+                VerticalOptions="Fill"
+                WidthRequest="275">
 
                 <Border
                     Background="Gray"
                     Margin="0,5,0,0"
                     Padding="5,0,5,0"
-                    WidthRequest="200"
                     MaximumHeightRequest="400"
                     IsVisible="{Binding History.IsVisible}">
                     <CollectionView ItemsSource="{Binding History.PangramHistory}">
@@ -302,9 +311,9 @@
                                             <Label.FormattedText>
                                                 <FormattedString>
                                                     <Span Text="{Binding PangramData.LetterSequence, Converter={StaticResource FirstCharacterConverter}}" 
-                                                          TextColor="Orange" FontAttributes="Bold" FontSize="15" FontFamily="IBMPlexMonoRegular"/>
+                                                            TextColor="Orange" FontAttributes="Bold" FontSize="15" FontFamily="IBMPlexMonoRegular"/>
                                                     <Span Text="{Binding PangramData.LetterSequence, Converter={StaticResource RemainingCharactersConverter}}" 
-                                                          TextColor="White" FontSize="15" FontFamily="IBMPlexMonoRegular"/>
+                                                            TextColor="White" FontSize="15" FontFamily="IBMPlexMonoRegular"/>
                                                 </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
@@ -407,109 +416,124 @@
                     </CollectionView>
                 </Border>
             </VerticalStackLayout>
+        </VerticalStackLayout>
 
-            <!-- MAIN -->
-            <VerticalStackLayout>
-                <VerticalStackLayout.IsVisible>
-                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                        <Binding Path="Sidebar.IsVisible" Converter="{StaticResource InvertedBoolConverter}"/>
-                        <Binding Path="History.IsVisible" Converter="{StaticResource InvertedBoolConverter}" />
-                    </MultiBinding>
-                </VerticalStackLayout.IsVisible>
+        <!-- MAIN -->
+        <VerticalStackLayout
+            Grid.Row="1"
+            VerticalOptions="Center">
+            <VerticalStackLayout.IsVisible>
+                <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                    <Binding Path="Sidebar.IsVisible" Converter="{StaticResource InvertedBoolConverter}"/>
+                    <Binding Path="History.IsVisible" Converter="{StaticResource InvertedBoolConverter}" />
+                </MultiBinding>
+            </VerticalStackLayout.IsVisible>
 
-                <AbsoluteLayout WidthRequest="275" 
+            <AbsoluteLayout WidthRequest="275" 
                                 HeightRequest="250" 
                                 Margin="0,20,0,20" 
                                 HorizontalOptions="Center" 
                                 Background="Transparent">
-                    <!-- top-left -->
-                    <Button Style="{StaticResource HexButtonStyle}" 
-          Text="{Binding OtherCharacters[0]}"
-          Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.AddLetterCommand}"
-          CommandParameter="{Binding OtherCharacters[0]}"
-          AbsoluteLayout.LayoutBounds="44,0,100,100"
-          AbsoluteLayout.LayoutFlags="None">
-                        <Button.Clip>
-                            <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
-                        </Button.Clip>
-                    </Button>
+                <!-- top-left -->
+                <Button Style="{StaticResource HexButtonStyle}" 
+                          Text="{Binding OtherCharacters[0]}"
+                          Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.AddLetterCommand}"
+                          CommandParameter="{Binding OtherCharacters[0]}"
+                          AbsoluteLayout.LayoutBounds="44,0,100,100"
+                          AbsoluteLayout.LayoutFlags="None">
+                    <Button.Clip>
+                        <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
+                    </Button.Clip>
+                </Button>
 
-                    <!-- top-right -->
-                    <Button Style="{StaticResource HexButtonStyle}"
-          Text="{Binding OtherCharacters[1]}"
-          Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.AddLetterCommand}"
-          CommandParameter="{Binding OtherCharacters[1]}"
-          AbsoluteLayout.LayoutBounds="134,0,100,100"
-          AbsoluteLayout.LayoutFlags="None">
-                        <Button.Clip>
-                            <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
-                        </Button.Clip>
-                    </Button>
+                <!-- top-right -->
+                <Button Style="{StaticResource HexButtonStyle}"
+                          Text="{Binding OtherCharacters[1]}"
+                          Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.AddLetterCommand}"
+                          CommandParameter="{Binding OtherCharacters[1]}"
+                          AbsoluteLayout.LayoutBounds="134,0,100,100"
+                          AbsoluteLayout.LayoutFlags="None">
+                    <Button.Clip>
+                        <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
+                    </Button.Clip>
+                </Button>
 
-                    <!-- left middle -->
-                    <Button Style="{StaticResource HexButtonStyle}"
-          Text="{Binding OtherCharacters[2]}"
-          Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.AddLetterCommand}"
-          CommandParameter="{Binding OtherCharacters[2]}"
-          AbsoluteLayout.LayoutBounds="0,74,100,100"
-          AbsoluteLayout.LayoutFlags="None">
-                        <Button.Clip>
-                            <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
-                        </Button.Clip>
-                    </Button>
+                <!-- left middle -->
+                <Button Style="{StaticResource HexButtonStyle}"
+                          Text="{Binding OtherCharacters[2]}"
+                          Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.AddLetterCommand}"
+                          CommandParameter="{Binding OtherCharacters[2]}"
+                          AbsoluteLayout.LayoutBounds="0,74,100,100"
+                          AbsoluteLayout.LayoutFlags="None">
+                    <Button.Clip>
+                        <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
+                    </Button.Clip>
+                </Button>
 
-                    <!-- center -->
-                    <Button Style="{StaticResource CenterHexButtonStyle}"
-          Text="{Binding PrimeCharacter}"
-          Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.AddLetterCommand}"
-          CommandParameter="{Binding PrimeCharacter}"
-          AbsoluteLayout.LayoutBounds="89,74,100,100"
-          AbsoluteLayout.LayoutFlags="None">
-                        <Button.Clip>
-                            <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
-                        </Button.Clip>
-                    </Button>
+                <!-- center -->
+                <Button Style="{StaticResource CenterHexButtonStyle}"
+                          Text="{Binding PrimeCharacter}"
+                          Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.AddLetterCommand}"
+                          CommandParameter="{Binding PrimeCharacter}"
+                          AbsoluteLayout.LayoutBounds="89,74,100,100"
+                          AbsoluteLayout.LayoutFlags="None">
+                    <Button.Clip>
+                        <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
+                    </Button.Clip>
+                </Button>
 
-                    <!-- right middle -->
-                    <Button Style="{StaticResource HexButtonStyle}"
-          Text="{Binding OtherCharacters[3]}"
-          Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.AddLetterCommand}"
-          CommandParameter="{Binding OtherCharacters[3]}"
-          AbsoluteLayout.LayoutBounds="178,74,100,100"
-          AbsoluteLayout.LayoutFlags="None">
-                        <Button.Clip>
-                            <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
-                        </Button.Clip>
-                    </Button>
+                <!-- right middle -->
+                <Button Style="{StaticResource HexButtonStyle}"
+                          Text="{Binding OtherCharacters[3]}"
+                          Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.AddLetterCommand}"
+                          CommandParameter="{Binding OtherCharacters[3]}"
+                          AbsoluteLayout.LayoutBounds="178,74,100,100"
+                          AbsoluteLayout.LayoutFlags="None">
+                    <Button.Clip>
+                        <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
+                    </Button.Clip>
+                </Button>
 
-                    <!-- bottom-left -->
-                    <Button Style="{StaticResource HexButtonStyle}"
-          Text="{Binding OtherCharacters[4]}"
-          Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.AddLetterCommand}"
-          CommandParameter="{Binding OtherCharacters[4]}"
-          AbsoluteLayout.LayoutBounds="44,147,100,100"
-          AbsoluteLayout.LayoutFlags="None">
-                        <Button.Clip>
-                            <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
-                        </Button.Clip>
-                    </Button>
+                <!-- bottom-left -->
+                <Button Style="{StaticResource HexButtonStyle}"
+                          Text="{Binding OtherCharacters[4]}"
+                          Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.AddLetterCommand}"
+                          CommandParameter="{Binding OtherCharacters[4]}"
+                          AbsoluteLayout.LayoutBounds="44,147,100,100"
+                          AbsoluteLayout.LayoutFlags="None">
+                    <Button.Clip>
+                        <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
+                    </Button.Clip>
+                </Button>
 
-                    <!-- bottom-right -->
-                    <Button Style="{StaticResource HexButtonStyle}"
-          Text="{Binding OtherCharacters[5]}"
-          Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.AddLetterCommand}"
-          CommandParameter="{Binding OtherCharacters[5]}"
-          AbsoluteLayout.LayoutBounds="134,147,100,100"
-          AbsoluteLayout.LayoutFlags="None">
-                        <Button.Clip>
-                            <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
-                        </Button.Clip>
-                    </Button>
-                </AbsoluteLayout>
+                <!-- bottom-right -->
+                <Button Style="{StaticResource HexButtonStyle}"
+                          Text="{Binding OtherCharacters[5]}"
+                          Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.AddLetterCommand}"
+                          CommandParameter="{Binding OtherCharacters[5]}"
+                          AbsoluteLayout.LayoutBounds="134,147,100,100"
+                          AbsoluteLayout.LayoutFlags="None">
+                    <Button.Clip>
+                        <PathGeometry Figures="M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z" />
+                    </Button.Clip>
+                </Button>
+            </AbsoluteLayout>
+     </VerticalStackLayout>
 
-                <HorizontalStackLayout HorizontalOptions="Center"
+        <VerticalStackLayout
+            Grid.Row="2"
+            Padding="0,0,0,40">
+            
+            <VerticalStackLayout.IsVisible>
+                <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                    <Binding Path="Sidebar.IsVisible" Converter="{StaticResource InvertedBoolConverter}"/>
+                    <Binding Path="History.IsVisible" Converter="{StaticResource InvertedBoolConverter}" />
+                </MultiBinding>
+            </VerticalStackLayout.IsVisible>
+            
+            <HorizontalStackLayout HorizontalOptions="Center"
                                        Margin="0,0,0,20">
-                    <Button
+                <Button
                         Margin="0,0,20,0"
                         WidthRequest="80"
                         HeightRequest="20"
@@ -521,9 +545,9 @@
                         Style="{StaticResource PressableButtonStyle}"
                         IsEnabled="{Binding Loading.HasLoaded}"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveLetterCommand}">
-                    </Button>
+                </Button>
 
-                    <Button
+                <Button
                         Margin="20,0,0,0"
                         WidthRequest="80"
                         HeightRequest="20"
@@ -535,10 +559,10 @@
                         Style="{StaticResource PressableButtonStyle}"
                         IsEnabled="{Binding Loading.HasLoaded}"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SubmitWordCommand}">
-                    </Button>
-                </HorizontalStackLayout>
+                </Button>
+            </HorizontalStackLayout>
 
-                <Button
+            <Button
                     Text="Shuffle"
                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.JumbleLettersCommand}"
                     IsEnabled="{Binding Loading.HasLoaded}"
@@ -547,43 +571,41 @@
                     BackgroundColor="Azure"
                     Style="{StaticResource PressableButtonStyle}"
                     Margin="10,0,0,20">
+            </Button>
+
+            <HorizontalStackLayout HorizontalOptions="Center">
+                <Button
+                            Text="Random"
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.NewGameCommand}"
+                            CommandParameter="{x:Static sys:Boolean.FalseString}"
+                            WidthRequest="100"
+                            IsEnabled="{Binding Loading.IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+                            TextColor="Black"
+                            BackgroundColor="Azure"
+                            Style="{StaticResource PressableButtonStyle}"
+                            Margin="0,0,10,0">
                 </Button>
 
-                <HorizontalStackLayout HorizontalOptions="Center">
-                    <Button
-                        Text="Random"
-                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.NewGameCommand}"
-                        CommandParameter="{x:Static sys:Boolean.FalseString}"
-                        WidthRequest="100"
-                        IsEnabled="{Binding Loading.IsLoading, Converter={StaticResource InvertedBoolConverter}}"
-                        TextColor="Black"
-                        BackgroundColor="Azure"
-                        Style="{StaticResource PressableButtonStyle}"
-                        Margin="0,0,10,0">
-                    </Button>
+                <Button
+                            Text="Daily"
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.NewGameCommand}"
+                            CommandParameter="{x:Static sys:Boolean.TrueString}"
+                            WidthRequest="100"
+                            IsEnabled="{Binding Loading.IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+                            TextColor="Black"
+                            BackgroundColor="Azure"
+                            Style="{StaticResource PressableButtonStyle}"
+                            Margin="10,0,0,0">
+                </Button>
+            </HorizontalStackLayout>
 
-                    <Button
-                        Text="Daily"
-                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.NewGameCommand}"
-                        CommandParameter="{x:Static sys:Boolean.TrueString}"
-                        WidthRequest="100"
-                        IsEnabled="{Binding Loading.IsLoading, Converter={StaticResource InvertedBoolConverter}}"
-                        TextColor="Black"
-                        BackgroundColor="Azure"
-                        Style="{StaticResource PressableButtonStyle}"
-                        Margin="10,0,0,0">
-                    </Button>
-                </HorizontalStackLayout>
-
-                <Label
-                    HorizontalOptions="Center"
-                    Margin="0,5,0,0"
-                    IsVisible="{Binding Loading.IsLoading}"
-                    TextColor="Green">
-                    Loading ...
-                </Label>
-            </VerticalStackLayout>
-
+            <Label
+                        HorizontalOptions="Center"
+                        Margin="0,5,0,0"
+                        IsVisible="{Binding Loading.IsLoading}"
+                        TextColor="Green">
+                Loading ...
+            </Label>
         </VerticalStackLayout>
-    </HorizontalStackLayout>
+    </Grid>
 </ContentPage>
