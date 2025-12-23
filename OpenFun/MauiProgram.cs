@@ -15,9 +15,9 @@ namespace OpenFun
                 .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
-                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                    fonts.AddFont("IBMPlexMono-Regular.ttf", "IBMPlexMonoRegular");
+                    fonts.AddFont("opensans_regular.ttf", "OpenSansRegular");
+                    fonts.AddFont("opensans_semibold.ttf", "OpenSansSemibold");
+                    fonts.AddFont("ibmplexmono_regular.ttf", "IBMPlexMonoRegular");
                 });
 
 #if DEBUG

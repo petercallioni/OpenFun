@@ -271,6 +271,7 @@
                                             Text="D"
                                             IsVisible="{Binding PangramData.IsDaily}"
                                             Grid.Column="0"
+                                            VerticalOptions="Center" 
                                             TextColor="Blue" FontAttributes="Bold" FontSize="15" FontFamily="IBMPlexMonoRegular">
                                         </Label>
 
@@ -278,6 +279,7 @@
                                             Text="R"
                                             IsVisible="{Binding PangramData.IsDaily, Converter={StaticResource InvertedBoolConverter}}"
                                             Grid.Column="0"
+                                            VerticalOptions="Center" 
                                             TextColor="Maroon" FontAttributes="Bold" FontSize="15" FontFamily="IBMPlexMonoRegular">
                                         </Label>
 
@@ -511,7 +513,7 @@
                         Margin="0,0,20,0"
                         WidthRequest="80"
                         HeightRequest="20"
-                        FontSize="16"
+                        FontSize="15"
                         VerticalOptions="Center"
                         Text="Back"
                         BackgroundColor="Red"
@@ -526,7 +528,7 @@
                         WidthRequest="80"
                         HeightRequest="20"
                         VerticalOptions="Center"
-                        FontSize="16"
+                        FontSize="15"
                         Text="Submit"
                         BackgroundColor="Green"
                         TextColor="White"
