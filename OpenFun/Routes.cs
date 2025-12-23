@@ -16,7 +16,7 @@ namespace OpenFun
             routes = new List<NavigationSelection>();
 
             routes.Add(new NavigationSelection(HOME_PAGE, "Home", typeof(HomePage)));
-            routes.Add(new NavigationSelection(GAMES_PANGRAM, "Pangram", typeof(Pangram.Pages.Pangram)));
+            routes.Add(new NavigationSelection(GAMES_PANGRAM, "Pangrams", typeof(Pangram.Pages.Pangram)));
             //routes.Add(new NavigationSelection(GAMES_PANGRAM, "Pangram2", typeof(Pangram.Pages.Pangram)));
         }
 

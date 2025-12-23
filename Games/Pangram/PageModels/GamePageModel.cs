@@ -252,7 +252,7 @@ namespace Pangram.PageModels
                 if (newGameIsDaily)
                 {
                     PangramData? existingDaily = History.PangramHistory
-                        .Where(item => item.PangramData.IsDaily && item.PangramData.Date.Date == DateTime.Now.Date)
+                        .Where(item => item.PangramData.IsDaily && item.PangramData.Date.Date == DateTime.UtcNow.Date)
                         .ToList()
                         .FirstOrDefault()
                         ?.PangramData;
