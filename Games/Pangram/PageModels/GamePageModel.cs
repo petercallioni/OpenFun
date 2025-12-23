@@ -75,6 +75,7 @@ namespace Pangram.PageModels
             {
                 if (lastGuessResult != value)
                 {
+                    lastGuess.SetLastGuess(value);
                     lastGuessResult = value;
                     OnPropertyChanged();
                 }
@@ -220,7 +221,6 @@ namespace Pangram.PageModels
                 PrimeCharacter = char.ToUpper(gameModel.WordLetterSequence!.Letters[0]);
 
                 LastGuessResult = GuessWordResults.NONE;
-                lastGuess.SetLastGuess(LastGuessResult);
 
                 GuessedWords.Clear();
                 gameModel.GuessedWords?.ForEach(word => GuessedWords.Add(word.ToUpper()));
@@ -284,7 +284,6 @@ namespace Pangram.PageModels
             }
 
             LastGuessResult = GuessWordResults.NONE;
-            lastGuess.SetLastGuess(LastGuessResult);
 
             GuessedWords.Clear();
             Sidebar.UpdateScore(0);
@@ -304,6 +303,15 @@ namespace Pangram.PageModels
         private void AddLetter(char letter)
         {
             CurrentWord += letter;
+
+            if (GuessedWords.Contains(currentWord))
+            {
+                LastGuessResult = GuessWordResults.ALREADY_GUESSED;
+            }
+            else
+            {
+                LastGuessResult = GuessWordResults.NONE;
+            }
         }
 
         [RelayCommand]
@@ -313,6 +321,8 @@ namespace Pangram.PageModels
             {
                 CurrentWord = CurrentWord.Remove(CurrentWord.Length - 1, 1);
             }
+            
+            LastGuessResult = GuessWordResults.NONE;
         }
 
         [RelayCommand]
@@ -341,8 +351,6 @@ namespace Pangram.PageModels
                 sidebar.UpdateScore(gameModel!.Score);
                 _ = SaveOrUpdateCurrentChallenge();
             }
-
-            lastGuess.SetLastGuess(LastGuessResult);
         }
 
         [RelayCommand]

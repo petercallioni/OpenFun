@@ -26,10 +26,10 @@ namespace Pangram.Components
         private string GetMessageForGuessResult(GuessWordResults result) =>
             result switch
             {
-                GuessWordResults.INVALID => "Word Not Valid",
-                GuessWordResults.ALREADY_GUESSED => "Already Guessed",
+                GuessWordResults.INVALID => "Word Not In Dictionary",
+                GuessWordResults.ALREADY_GUESSED => "Already Scored",
                 GuessWordResults.FORBIDDEN_CHARACTERS => "Contains Invalid Characters",
-                GuessWordResults.DOES_NOT_CONTAIN_MAIN_LETTER => "Does Not Contain Main Letter",
+                GuessWordResults.DOES_NOT_CONTAIN_MAIN_LETTER => "Must Contain Main Letter",
                 GuessWordResults.VALID => string.Empty,
                 GuessWordResults.VALID_PANGRAM => string.Empty,
                 GuessWordResults.NONE => string.Empty,
