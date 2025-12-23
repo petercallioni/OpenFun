@@ -217,7 +217,9 @@
             Margin="0,5,0,0"
             Padding="5,0,5,0"
             WidthRequest="200"
-            IsVisible="{Binding Sidebar.IsVisible}">
+            VerticalOptions="Fill"
+            IsVisible="{Binding Sidebar.IsVisible}"
+            MaximumHeightRequest="400">
                     <ListView ItemsSource="{Binding GuessedWords}"
                       HorizontalOptions="Start">
                         <ListView.ItemTemplate>
@@ -247,6 +249,7 @@
                     Margin="0,5,0,0"
                     Padding="5,0,5,0"
                     WidthRequest="200"
+                    MaximumHeightRequest="400"
                     IsVisible="{Binding History.IsVisible}">
                     <ListView ItemsSource="{Binding History.PangramHistory}"
                         HorizontalOptions="Start">
