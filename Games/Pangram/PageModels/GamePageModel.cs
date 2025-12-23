@@ -229,6 +229,7 @@ namespace Pangram.PageModels
                 Sidebar.UpdateMaxScore(gameModel.MaxScore);
 
                 History.ClosePangramDetail(data);
+                History.IsVisible = false;
             }
             catch (Exception ex)
             {
