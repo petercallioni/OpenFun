@@ -209,17 +209,17 @@
 
             <!-- SCORE -->
             <VerticalStackLayout 
-        HorizontalOptions="Fill" 
-        VerticalOptions="Fill">
+                HorizontalOptions="Fill" 
+                VerticalOptions="Fill">
 
                 <Border
-            Background="Gray"
-            Margin="0,5,0,0"
-            Padding="5,0,5,0"
-            WidthRequest="200"
-            VerticalOptions="Fill"
-            IsVisible="{Binding Sidebar.IsVisible}"
-            MaximumHeightRequest="400">
+                    Background="Gray"
+                    Margin="0,5,0,0"
+                    Padding="5,0,5,0"
+                    WidthRequest="200"
+                    VerticalOptions="Fill"
+                    IsVisible="{Binding Sidebar.IsVisible}"
+                    MaximumHeightRequest="400">
                     <ListView ItemsSource="{Binding GuessedWords}"
                       HorizontalOptions="Start">
                         <ListView.ItemTemplate>
@@ -251,147 +251,142 @@
                     WidthRequest="200"
                     MaximumHeightRequest="400"
                     IsVisible="{Binding History.IsVisible}">
-                    <ListView ItemsSource="{Binding History.PangramHistory}"
-                        HasUnevenRows="True"
-                        RowHeight="-1"
-                        HorizontalOptions="Start">
-                        <ListView.ItemTemplate>
+                    <CollectionView ItemsSource="{Binding History.PangramHistory}">
+                        <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <ViewCell>
-                                    <VerticalStackLayout>
-                                        <VerticalStackLayout.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding ToggleVisibilityCommand}"/>
-                                        </VerticalStackLayout.GestureRecognizers>
+                                <VerticalStackLayout>
+                                    <VerticalStackLayout.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding ToggleVisibilityCommand}"/>
+                                    </VerticalStackLayout.GestureRecognizers>
 
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="30" />
-                                            </Grid.ColumnDefinitions>
-                                            <Label 
-                                                Text="{Binding PangramData.Date, Converter={StaticResource DateTimeToStringConverter}}" 
-                                                FontSize="15" 
-                                                TextColor="White" 
-                                                VerticalOptions="Center" 
-                                                HorizontalOptions="Start" 
-                                                Padding="0,0,0,0" 
-                                                Grid.Row="0"
-                                                Grid.Column="0"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="30" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label 
+                                            Text="{Binding PangramData.Date, Converter={StaticResource DateTimeToStringConverter}}" 
+                                            FontSize="15" 
+                                            TextColor="White" 
+                                            VerticalOptions="Center" 
+                                            HorizontalOptions="Start" 
+                                            Padding="0,0,0,0" 
+                                            Grid.Row="0"
+                                            Grid.Column="0"/>
 
-                                            <Label 
-                                                VerticalOptions="Center" 
-                                                HorizontalOptions="End" 
-                                                Padding="0,0,0,0"
-                                                Grid.Row="0"
-                                                Grid.Column="1">
-                                                <Label.FormattedText>
-                                                    <FormattedString>
-                                                        <Span Text="{Binding PangramData.LetterSequence, Converter={StaticResource FirstCharacterConverter}}" 
-                                                      TextColor="Orange" FontAttributes="Bold" FontSize="15" FontFamily="IBMPlexMonoRegular"/>
-                                                        <Span Text="{Binding PangramData.LetterSequence, Converter={StaticResource RemainingCharactersConverter}}" 
-                                                      TextColor="White" FontSize="15" FontFamily="IBMPlexMonoRegular"/>
-                                                    </FormattedString>
-                                                </Label.FormattedText>
-                                            </Label>
+                                        <Label 
+                                            VerticalOptions="Center" 
+                                            HorizontalOptions="End" 
+                                            Padding="0,0,0,0"
+                                            Grid.Row="0"
+                                            Grid.Column="1">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding PangramData.LetterSequence, Converter={StaticResource FirstCharacterConverter}}" 
+                                                          TextColor="Orange" FontAttributes="Bold" FontSize="15" FontFamily="IBMPlexMonoRegular"/>
+                                                    <Span Text="{Binding PangramData.LetterSequence, Converter={StaticResource RemainingCharactersConverter}}" 
+                                                          TextColor="White" FontSize="15" FontFamily="IBMPlexMonoRegular"/>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
 
-                                            <Image Source="chevron_down_circled.png"
-                                               Grid.Column="2"
-                                               WidthRequest="20"
-                                               IsVisible="{Binding IsVisible, Converter={StaticResource InvertedBoolConverter}}"/>
+                                        <Image Source="chevron_down_circled.png"
+                                                Grid.Column="2"
+                                                WidthRequest="20"
+                                                IsVisible="{Binding IsVisible, Converter={StaticResource InvertedBoolConverter}}"/>
 
-                                            <Image Source="chevron_up_circled.png"
-                                               Grid.Column="2"
-                                               WidthRequest="20"
-                                               IsVisible="{Binding IsVisible}"/>
-                                        </Grid>
-                                        <HorizontalStackLayout
-                                            HorizontalOptions="Center"
-                                            Padding="0,3,0,0"
-                                            Grid.Row="1"
-                                            IsVisible="{Binding IsVisible}">
+                                        <Image Source="chevron_up_circled.png"
+                                                Grid.Column="2"
+                                                WidthRequest="20"
+                                                IsVisible="{Binding IsVisible}"/>
+                                    </Grid>
+                                    <HorizontalStackLayout
+                                        HorizontalOptions="Center"
+                                        Padding="0,3,0,0"
+                                        Grid.Row="1"
+                                        IsVisible="{Binding IsVisible}">
 
-                                            <Border
-                                                WidthRequest="60"
-                                                HeightRequest="60"
-                                                Background="Green"
-                                                Margin="0,0,10,0"
-                                                Grid.Column="0">
-                                                <Border.Style>
-                                                    <Style TargetType="Border">
-                                                        <Setter Property="VisualStateManager.VisualStateGroups">
-                                                            <VisualStateGroupList>
-                                                                <VisualStateGroup x:Name="CommonStates">
-                                                                    <VisualState x:Name="Normal" />
-                                                                    <VisualState x:Name="PointerOver">
-                                                                        <VisualState.Setters>
-                                                                            <Setter Property="Background" Value="#7EFF4D" />
-                                                                        </VisualState.Setters>
-                                                                    </VisualState>
-                                                                    <VisualState x:Name="Pressed">
-                                                                        <VisualState.Setters>
-                                                                            <Setter Property="Background" Value="#085F00" />
-                                                                            <Setter Property="Scale" Value="0.98" />
-                                                                        </VisualState.Setters>
-                                                                    </VisualState>
-                                                                </VisualStateGroup>
-                                                            </VisualStateGroupList>
-                                                        </Setter>
-                                                    </Style>
-                                                </Border.Style>
-                                                <Image Source="file_import.png"
-                                                    Aspect="Fill">
-                                                    <Image.GestureRecognizers>
-                                                        <TapGestureRecognizer 
-                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.LoadGameCommand}"
-                                                            CommandParameter="{Binding PangramData}"/>
-                                                    </Image.GestureRecognizers>
-                                                </Image>
-                                            </Border>
+                                        <Border
+                                            WidthRequest="60"
+                                            HeightRequest="60"
+                                            Background="Green"
+                                            Margin="0,0,10,0"
+                                            Grid.Column="0">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="VisualStateManager.VisualStateGroups">
+                                                        <VisualStateGroupList>
+                                                            <VisualStateGroup x:Name="CommonStates">
+                                                                <VisualState x:Name="Normal" />
+                                                                <VisualState x:Name="PointerOver">
+                                                                    <VisualState.Setters>
+                                                                        <Setter Property="Background" Value="#7EFF4D" />
+                                                                    </VisualState.Setters>
+                                                                </VisualState>
+                                                                <VisualState x:Name="Pressed">
+                                                                    <VisualState.Setters>
+                                                                        <Setter Property="Background" Value="#085F00" />
+                                                                        <Setter Property="Scale" Value="0.98" />
+                                                                    </VisualState.Setters>
+                                                                </VisualState>
+                                                            </VisualStateGroup>
+                                                        </VisualStateGroupList>
+                                                    </Setter>
+                                                </Style>
+                                            </Border.Style>
+                                            <Image Source="file_import.png"
+                                                        Aspect="Fill">
+                                                <Image.GestureRecognizers>
+                                                    <TapGestureRecognizer 
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.LoadGameCommand}"
+                                                        CommandParameter="{Binding PangramData}"/>
+                                                </Image.GestureRecognizers>
+                                            </Image>
+                                        </Border>
 
-                                            <Border
-                                                WidthRequest="60"
-                                                HeightRequest="60"
-                                                Grid.Column="1"
-                                                Margin="10,0,0,0"
-                                                Background="Red">
-                                                <Border.Style>
-                                                    <Style TargetType="Border">
-                                                        <Setter Property="VisualStateManager.VisualStateGroups">
-                                                            <VisualStateGroupList>
-                                                                <VisualStateGroup x:Name="CommonStates">
-                                                                    <VisualState x:Name="Normal" />
-                                                                    <VisualState x:Name="PointerOver">
-                                                                        <VisualState.Setters>
-                                                                            <Setter Property="Background" Value="#FFF400" />
-                                                                        </VisualState.Setters>
-                                                                    </VisualState>
-                                                                    <VisualState x:Name="Pressed">
-                                                                        <VisualState.Setters>
-                                                                            <Setter Property="Background" Value="#BBA700" />
-                                                                            <Setter Property="Scale" Value="0.98" />
-                                                                        </VisualState.Setters>
-                                                                    </VisualState>
-                                                                </VisualStateGroup>
-                                                            </VisualStateGroupList>
-                                                        </Setter>
-                                                    </Style>
-                                                </Border.Style>
-                                                <Image Source="garbage_can.png"
-                                                    Aspect="Fill">
-                                                    <Image.GestureRecognizers>
-                                                        <TapGestureRecognizer 
-                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteGameCommand}"
-                                                            CommandParameter="{Binding .}"/>
-                                                    </Image.GestureRecognizers>
-                                                </Image>
-                                            </Border>
-                                        </HorizontalStackLayout>
-                                    </VerticalStackLayout>
-                                </ViewCell>
+                                        <Border
+                                            WidthRequest="60"
+                                            HeightRequest="60"
+                                            Grid.Column="1"
+                                            Margin="10,0,0,0"
+                                            Background="Red">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="VisualStateManager.VisualStateGroups">
+                                                        <VisualStateGroupList>
+                                                            <VisualStateGroup x:Name="CommonStates">
+                                                                <VisualState x:Name="Normal" />
+                                                                <VisualState x:Name="PointerOver">
+                                                                    <VisualState.Setters>
+                                                                        <Setter Property="Background" Value="#FFF400" />
+                                                                    </VisualState.Setters>
+                                                                </VisualState>
+                                                                <VisualState x:Name="Pressed">
+                                                                    <VisualState.Setters>
+                                                                        <Setter Property="Background" Value="#BBA700" />
+                                                                        <Setter Property="Scale" Value="0.98" />
+                                                                    </VisualState.Setters>
+                                                                </VisualState>
+                                                            </VisualStateGroup>
+                                                        </VisualStateGroupList>
+                                                    </Setter>
+                                                </Style>
+                                            </Border.Style>
+                                            <Image Source="garbage_can.png"
+                                                        Aspect="Fill">
+                                                <Image.GestureRecognizers>
+                                                    <TapGestureRecognizer 
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteGameCommand}"
+                                                        CommandParameter="{Binding .}"/>
+                                                </Image.GestureRecognizers>
+                                            </Image>
+                                        </Border>
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
                             </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
                 </Border>
             </VerticalStackLayout>
 
