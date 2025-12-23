@@ -279,6 +279,7 @@ namespace Pangram.PageModels
                 loading.IsLoading = true;
                 loading.HasLoaded = false;
                 await gameModel.InitialiseGame(newGameIsDaily);
+                FoundPangramWord = "";
                 PrimeCharacter = char.ToUpper(gameModel.WordLetterSequence!.Letters[0]);
                 OtherCharacters = gameModel.WordLetterSequence.Letters
                     .Skip(1)

@@ -60,6 +60,10 @@ namespace Pangram.Models
             {
                 foundPangramWord = data.Word;
             }
+            else
+            {
+                foundPangramWord = null;
+            }
         }
 
         public async Task InitialiseGame(bool daily)
@@ -67,6 +71,7 @@ namespace Pangram.Models
             dictionaryCache ??= new DictionaryCache(appFileProvider);
             maxScore = 0;
             score = 0;
+            foundPangramWord = null;
             isDaily = daily;
             createdDate = DateTime.UtcNow;
 
