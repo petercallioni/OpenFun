@@ -252,29 +252,23 @@
                     MaximumHeightRequest="400"
                     IsVisible="{Binding History.IsVisible}">
                     <ListView ItemsSource="{Binding History.PangramHistory}"
+                        HasUnevenRows="True"
+                        RowHeight="-1"
                         HorizontalOptions="Start">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-                                        
-                                        <Grid
-                                            Grid.Row="0">
+                                    <VerticalStackLayout>
+                                        <VerticalStackLayout.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding ToggleVisibilityCommand}"/>
+                                        </VerticalStackLayout.GestureRecognizers>
 
-                                            <Grid.GestureRecognizers>
-                                                <TapGestureRecognizer Command="{Binding ToggleVisibilityCommand}"/>
-                                            </Grid.GestureRecognizers>
-
+                                        <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="30" />
                                             </Grid.ColumnDefinitions>
-
                                             <Label 
                                                 Text="{Binding PangramData.Date, Converter={StaticResource DateTimeToStringConverter}}" 
                                                 FontSize="15" 
@@ -311,25 +305,17 @@
                                                WidthRequest="20"
                                                IsVisible="{Binding IsVisible}"/>
                                         </Grid>
-
-                                        <Grid
+                                        <HorizontalStackLayout
+                                            HorizontalOptions="Center"
                                             Padding="0,3,0,0"
                                             Grid.Row="1"
                                             IsVisible="{Binding IsVisible}">
-
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
 
                                             <Border
                                                 WidthRequest="60"
                                                 HeightRequest="60"
                                                 Background="Green"
+                                                Margin="0,0,10,0"
                                                 Grid.Column="0">
                                                 <Border.Style>
                                                     <Style TargetType="Border">
@@ -354,20 +340,21 @@
                                                     </Style>
                                                 </Border.Style>
                                                 <Image Source="file_import.png"
-                                                     Aspect="Fill">
+                                                    Aspect="Fill">
                                                     <Image.GestureRecognizers>
                                                         <TapGestureRecognizer 
-                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.LoadGameCommand}"
-                                                    CommandParameter="{Binding PangramData}"/>
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.LoadGameCommand}"
+                                                            CommandParameter="{Binding PangramData}"/>
                                                     </Image.GestureRecognizers>
                                                 </Image>
                                             </Border>
 
                                             <Border
-                                        WidthRequest="60"
-                                        HeightRequest="60"
-                                        Grid.Column="1"
-                                        Background="Red">
+                                                WidthRequest="60"
+                                                HeightRequest="60"
+                                                Grid.Column="1"
+                                                Margin="10,0,0,0"
+                                                Background="Red">
                                                 <Border.Style>
                                                     <Style TargetType="Border">
                                                         <Setter Property="VisualStateManager.VisualStateGroups">
@@ -391,16 +378,16 @@
                                                     </Style>
                                                 </Border.Style>
                                                 <Image Source="garbage_can.png"
-                                                  Aspect="Fill">
+                                                    Aspect="Fill">
                                                     <Image.GestureRecognizers>
                                                         <TapGestureRecognizer 
-                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteGameCommand}"
-                                                        CommandParameter="{Binding .}"/>
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteGameCommand}"
+                                                            CommandParameter="{Binding .}"/>
                                                     </Image.GestureRecognizers>
                                                 </Image>
                                             </Border>
-                                        </Grid>
-                                    </Grid>
+                                        </HorizontalStackLayout>
+                                    </VerticalStackLayout>
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
