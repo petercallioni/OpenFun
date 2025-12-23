@@ -261,26 +261,42 @@
 
                                     <Grid>
                                         <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="30" />
+                                            <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
+
+                                        <Label
+                                            Text="D"
+                                            IsVisible="{Binding PangramData.IsDaily}"
+                                            Grid.Column="0"
+                                            TextColor="Blue" FontAttributes="Bold" FontSize="15" FontFamily="IBMPlexMonoRegular">
+                                        </Label>
+
+                                        <Label
+                                            Text="R"
+                                            IsVisible="{Binding PangramData.IsDaily, Converter={StaticResource InvertedBoolConverter}}"
+                                            Grid.Column="0"
+                                            TextColor="Maroon" FontAttributes="Bold" FontSize="15" FontFamily="IBMPlexMonoRegular">
+                                        </Label>
+
                                         <Label 
                                             Text="{Binding PangramData.Date, Converter={StaticResource DateTimeToStringConverter}}" 
                                             FontSize="15" 
                                             TextColor="White" 
                                             VerticalOptions="Center" 
                                             HorizontalOptions="Start" 
-                                            Padding="0,0,0,0" 
+                                            Padding="5,0,0,0" 
                                             Grid.Row="0"
-                                            Grid.Column="0"/>
+                                            Grid.Column="1"/>
 
                                         <Label 
                                             VerticalOptions="Center" 
                                             HorizontalOptions="End" 
                                             Padding="0,0,0,0"
                                             Grid.Row="0"
-                                            Grid.Column="1">
+                                            Grid.Column="2">
                                             <Label.FormattedText>
                                                 <FormattedString>
                                                     <Span Text="{Binding PangramData.LetterSequence, Converter={StaticResource FirstCharacterConverter}}" 
@@ -292,12 +308,12 @@
                                         </Label>
 
                                         <Image Source="chevron_down_circled.png"
-                                                Grid.Column="2"
+                                                Grid.Column="3"
                                                 WidthRequest="20"
                                                 IsVisible="{Binding IsVisible, Converter={StaticResource InvertedBoolConverter}}"/>
 
                                         <Image Source="chevron_up_circled.png"
-                                                Grid.Column="2"
+                                                Grid.Column="3"
                                                 WidthRequest="20"
                                                 IsVisible="{Binding IsVisible}"/>
                                     </Grid>
