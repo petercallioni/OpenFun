@@ -8,7 +8,7 @@ namespace OpenFun_Core.Converters
         {
             if (value is DateTime date)
             {
-                return date.ToString("dd/MM/yyyy");
+                return date.ToLocalTime().ToString("dd/MM/yyyy");
             }
 
             return "";

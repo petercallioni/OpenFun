@@ -68,7 +68,7 @@ namespace Pangram.Models
             maxScore = 0;
             score = 0;
             isDaily = daily;
-            createdDate = DateTime.UtcNow.Date;
+            createdDate = DateTime.UtcNow;
 
             await dictionaryCache.LoadDictionaryAsync();
 
