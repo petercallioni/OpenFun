@@ -100,6 +100,7 @@
             <gconverters:IsStringNotNullOrEmptyConverter x:Key="IsStringNotNullOrEmptyConverter" />
             <gconverters:BooleanOrConverter x:Key="BooleanOrConverter" />
             <gconverters:BooleanAndConverter x:Key="BooleanAndConverter" />
+            <gconverters:CaseConverter x:Key="CaseConverter" />
         </ResourceDictionary>
 
     </ContentPage.Resources>
@@ -318,21 +319,30 @@
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
 
-                                        <Label
-                                            Text="D"
-                                            IsVisible="{Binding PangramData.IsDaily}"
-                                            Grid.Column="0"
-                                            VerticalOptions="Center" 
-                                            TextColor="Blue" FontAttributes="Bold" FontSize="15" FontFamily="IBMPlexMonoRegular">
-                                        </Label>
+                                        <HorizontalStackLayout
+                                            Grid.Column="0">
 
-                                        <Label
-                                            Text="R"
-                                            IsVisible="{Binding PangramData.IsDaily, Converter={StaticResource InvertedBoolConverter}}"
-                                            Grid.Column="0"
-                                            VerticalOptions="Center" 
-                                            TextColor="Maroon" FontAttributes="Bold" FontSize="15" FontFamily="IBMPlexMonoRegular">
-                                        </Label>
+                                            <Image
+                                                Source="crown.png"
+                                                WidthRequest="20"
+                                                Margin="0,0,5,0"
+                                                IsVisible="{Binding PangramData.GotPangram}">
+                                            </Image>
+                                            
+                                            <Label
+                                                Text="D"
+                                                IsVisible="{Binding PangramData.IsDaily}"
+                                                VerticalOptions="Center" 
+                                                TextColor="Blue" FontAttributes="Bold" FontSize="15" FontFamily="IBMPlexMonoRegular">
+                                            </Label>
+
+                                            <Label
+                                                Text="R"
+                                                IsVisible="{Binding PangramData.IsDaily, Converter={StaticResource InvertedBoolConverter}}"
+                                                VerticalOptions="Center" 
+                                                TextColor="Maroon" FontAttributes="Bold" FontSize="15" FontFamily="IBMPlexMonoRegular">
+                                            </Label>
+                                        </HorizontalStackLayout>
 
                                         <Label 
                                             Text="{Binding PangramData.Date, Converter={StaticResource DateTimeToStringConverter}}" 
@@ -370,88 +380,100 @@
                                                 WidthRequest="20"
                                                 IsVisible="{Binding IsVisible}"/>
                                     </Grid>
-                                    <HorizontalStackLayout
-                                        HorizontalOptions="Center"
-                                        Padding="0,3,0,0"
-                                        Grid.Row="1"
-                                        IsVisible="{Binding IsVisible}">
+                                    <VerticalStackLayout>
+                                        <Label
+                                            HorizontalOptions="Center"
+                                            Text="{Binding PangramData.Word, Converter={StaticResource CaseConverter}, ConverterParameter='UPPER'}"
+                                            TextColor="Orange">
+                                            <Label.IsVisible>
+                                                <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                                    <Binding Path="PangramData.GotPangram"/>
+                                                    <Binding Path="IsVisible" />
+                                                </MultiBinding>
+                                            </Label.IsVisible>
+                                        </Label>
+                                        <HorizontalStackLayout
+                                            HorizontalOptions="Center"
+                                            Padding="0,3,0,3"
+                                            Grid.Row="1"
+                                            IsVisible="{Binding IsVisible}">
+                                            <Border
+                                                WidthRequest="60"
+                                                HeightRequest="60"
+                                                Grid.Column="1"
+                                                Margin="0,0,20,0"
+                                                Background="Red">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="VisualStateManager.VisualStateGroups">
+                                                            <VisualStateGroupList>
+                                                                <VisualStateGroup x:Name="CommonStates">
+                                                                    <VisualState x:Name="Normal" />
+                                                                    <VisualState x:Name="PointerOver">
+                                                                        <VisualState.Setters>
+                                                                            <Setter Property="Background" Value="#FFF400" />
+                                                                        </VisualState.Setters>
+                                                                    </VisualState>
+                                                                    <VisualState x:Name="Pressed">
+                                                                        <VisualState.Setters>
+                                                                            <Setter Property="Background" Value="#BBA700" />
+                                                                            <Setter Property="Scale" Value="0.98" />
+                                                                        </VisualState.Setters>
+                                                                    </VisualState>
+                                                                </VisualStateGroup>
+                                                            </VisualStateGroupList>
+                                                        </Setter>
+                                                    </Style>
+                                                </Border.Style>
+                                                <Image Source="garbage_can.png"
+                                                    Aspect="Fill">
+                                                    <Image.GestureRecognizers>
+                                                        <TapGestureRecognizer 
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteGameCommand}"
+                                                            CommandParameter="{Binding .}"/>
+                                                    </Image.GestureRecognizers>
+                                                </Image>
+                                            </Border>
 
-                                        <Border
-                                            WidthRequest="60"
-                                            HeightRequest="60"
-                                            Background="Green"
-                                            Margin="0,0,10,0"
-                                            Grid.Column="0">
-                                            <Border.Style>
-                                                <Style TargetType="Border">
-                                                    <Setter Property="VisualStateManager.VisualStateGroups">
-                                                        <VisualStateGroupList>
-                                                            <VisualStateGroup x:Name="CommonStates">
-                                                                <VisualState x:Name="Normal" />
-                                                                <VisualState x:Name="PointerOver">
-                                                                    <VisualState.Setters>
-                                                                        <Setter Property="Background" Value="#7EFF4D" />
-                                                                    </VisualState.Setters>
-                                                                </VisualState>
-                                                                <VisualState x:Name="Pressed">
-                                                                    <VisualState.Setters>
-                                                                        <Setter Property="Background" Value="#085F00" />
-                                                                        <Setter Property="Scale" Value="0.98" />
-                                                                    </VisualState.Setters>
-                                                                </VisualState>
-                                                            </VisualStateGroup>
-                                                        </VisualStateGroupList>
-                                                    </Setter>
-                                                </Style>
-                                            </Border.Style>
-                                            <Image Source="file_import.png"
-                                                        Aspect="Fill">
-                                                <Image.GestureRecognizers>
-                                                    <TapGestureRecognizer 
-                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.LoadGameCommand}"
-                                                        CommandParameter="{Binding PangramData}"/>
-                                                </Image.GestureRecognizers>
-                                            </Image>
-                                        </Border>
-
-                                        <Border
-                                            WidthRequest="60"
-                                            HeightRequest="60"
-                                            Grid.Column="1"
-                                            Margin="10,0,0,0"
-                                            Background="Red">
-                                            <Border.Style>
-                                                <Style TargetType="Border">
-                                                    <Setter Property="VisualStateManager.VisualStateGroups">
-                                                        <VisualStateGroupList>
-                                                            <VisualStateGroup x:Name="CommonStates">
-                                                                <VisualState x:Name="Normal" />
-                                                                <VisualState x:Name="PointerOver">
-                                                                    <VisualState.Setters>
-                                                                        <Setter Property="Background" Value="#FFF400" />
-                                                                    </VisualState.Setters>
-                                                                </VisualState>
-                                                                <VisualState x:Name="Pressed">
-                                                                    <VisualState.Setters>
-                                                                        <Setter Property="Background" Value="#BBA700" />
-                                                                        <Setter Property="Scale" Value="0.98" />
-                                                                    </VisualState.Setters>
-                                                                </VisualState>
-                                                            </VisualStateGroup>
-                                                        </VisualStateGroupList>
-                                                    </Setter>
-                                                </Style>
-                                            </Border.Style>
-                                            <Image Source="garbage_can.png"
-                                                        Aspect="Fill">
-                                                <Image.GestureRecognizers>
-                                                    <TapGestureRecognizer 
-                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteGameCommand}"
-                                                        CommandParameter="{Binding .}"/>
-                                                </Image.GestureRecognizers>
-                                            </Image>
-                                        </Border>
-                                    </HorizontalStackLayout>
+                                            <Border
+                                                WidthRequest="60"
+                                                HeightRequest="60"
+                                                Background="Green"
+                                                Margin="20,0,0,0"
+                                                Grid.Column="0">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="VisualStateManager.VisualStateGroups">
+                                                            <VisualStateGroupList>
+                                                                <VisualStateGroup x:Name="CommonStates">
+                                                                    <VisualState x:Name="Normal" />
+                                                                    <VisualState x:Name="PointerOver">
+                                                                        <VisualState.Setters>
+                                                                            <Setter Property="Background" Value="#7EFF4D" />
+                                                                        </VisualState.Setters>
+                                                                    </VisualState>
+                                                                    <VisualState x:Name="Pressed">
+                                                                        <VisualState.Setters>
+                                                                            <Setter Property="Background" Value="#085F00" />
+                                                                            <Setter Property="Scale" Value="0.98" />
+                                                                        </VisualState.Setters>
+                                                                    </VisualState>
+                                                                </VisualStateGroup>
+                                                            </VisualStateGroupList>
+                                                        </Setter>
+                                                    </Style>
+                                                </Border.Style>
+                                                <Image Source="file_import.png"
+                                                            Aspect="Fill">
+                                                    <Image.GestureRecognizers>
+                                                        <TapGestureRecognizer 
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.LoadGameCommand}"
+                                                            CommandParameter="{Binding PangramData}"/>
+                                                    </Image.GestureRecognizers>
+                                                </Image>
+                                            </Border>
+                                        </HorizontalStackLayout>
+                                    </VerticalStackLayout>
                                 </VerticalStackLayout>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
