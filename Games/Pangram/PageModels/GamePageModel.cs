@@ -391,16 +391,19 @@ namespace Pangram.PageModels
                     }
                 }
 
-                bool confirmed = await dialogService.DisplayConfirmationAsync(
-                    "New Game",
-                    $"Start a new {(newGameIsDaily ? "daily" : "random")} game?",
-                    "Start",
-                    "Cancel"
-                );
-
-                if (!confirmed)
+                if (Loading.HasLoaded || !newGameIsDaily)
                 {
-                    return;
+                    bool confirmed = await dialogService.DisplayConfirmationAsync(
+                        "New Game",
+                        $"Start a {(newGameIsDaily ? "daily" : "random")} game?",
+                        "Start",
+                        "Cancel"
+                    );
+
+                    if (!confirmed)
+                    {
+                        return;
+                    }
                 }
 
                 loading.IsLoading = true;
