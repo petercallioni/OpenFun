@@ -295,14 +295,20 @@
             <VerticalStackLayout 
                 HorizontalOptions="Fill" 
                 VerticalOptions="Fill"
-                WidthRequest="275">
-
+                WidthRequest="275"
+                IsVisible="{Binding History.IsVisible}">
+                <Button
+                    Style="{StaticResource PressableButtonStyle}"
+                    Command="{Binding DeleteCompletedGamesCommand}"
+                    Text="Clear All Completed"
+                    Margin="0,5,0,5"
+                    Padding="0"
+                    MinimumHeightRequest="25">
+                </Button>
                 <Border
                     Background="Gray"
-                    Margin="0,5,0,0"
                     Padding="5,0,5,0"
-                    MaximumHeightRequest="400"
-                    IsVisible="{Binding History.IsVisible}">
+                    MaximumHeightRequest="400">
                     <CollectionView ItemsSource="{Binding History.PangramHistory}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>

@@ -227,6 +227,28 @@ namespace Pangram.PageModels
         }
 
         [RelayCommand]
+        private async Task DeleteCompletedGames()
+        {
+            bool confirmed = await dialogService.DisplayConfirmationAsync(
+                "Delete Games",
+                "Are you sure you want to all completed games (games that have a crown)?",
+                "Delete",
+                "Cancel"
+            );
+
+            if (confirmed)
+            {
+                var toDelete = History.PangramHistory.Where(x => x.PangramData.GotPangram).ToList();
+
+                foreach (var game in toDelete)
+                {
+                    History.PangramHistory.Remove(game);
+                    _ = databaseService.DeleteAsync<PangramData>(game.PangramData.Id);
+                }
+            }
+        }
+
+        [RelayCommand]
         private async Task DeleteCurrentGame()
         {
             bool confirmed = await dialogService.DisplayConfirmationAsync(
