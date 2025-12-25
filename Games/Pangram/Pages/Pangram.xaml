@@ -528,11 +528,11 @@
                     <Binding Path="Sidebar.IsVisible" Converter="{StaticResource InvertedBoolConverter}"/>
                     <Binding Path="History.IsVisible" Converter="{StaticResource InvertedBoolConverter}" />
                 </MultiBinding>
-                </VerticalStackLayout.IsVisible>
+            </VerticalStackLayout.IsVisible>
 
-                <HorizontalStackLayout HorizontalOptions="Center"
+            <HorizontalStackLayout HorizontalOptions="Center"
                                     Margin="0,0,0,20">
-                    <Button
+                <Button
                     Margin="0,0,10,0"
                     WidthRequest="100"
                     HeightRequest="20"
@@ -544,9 +544,9 @@
                     Style="{StaticResource PressableButtonStyle}"
                     IsEnabled="{Binding Loading.HasLoaded}"
                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveLetterCommand}">
-                    </Button>
+                </Button>
 
-                    <Button
+                <Button
                     Margin="10,0,0,0"
                     WidthRequest="100"
                     HeightRequest="20"
@@ -558,8 +558,8 @@
                     Style="{StaticResource PressableButtonStyle}"
                     IsEnabled="{Binding Loading.HasLoaded}"
                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SubmitWordCommand}">
-                    </Button>
-                </HorizontalStackLayout>
+                </Button>
+            </HorizontalStackLayout>
 
             <HorizontalStackLayout
                 HorizontalOptions="Center"
@@ -569,11 +569,10 @@
                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.JumbleLettersCommand}"
                     IsEnabled="{Binding Loading.HasLoaded}"
                     WidthRequest="100"
-                    TextColor="Black"
-                    BackgroundColor="Azure"
+                    TextColor="White"
+                    BackgroundColor="#004CFF"
                     Style="{StaticResource PressableButtonStyle}"
-                    Margin="0,0,10,0"
-                    >
+                    Margin="0,0,10,0">
                 </Button>
 
                 <HorizontalStackLayout
@@ -583,16 +582,19 @@
                         WidthRequest="120"
                         Margin="10,0,0,0"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DisplayAvailableSuffixesCommand}"
-                        Style="{StaticResource PressableButtonStyle}">
+                        Style="{StaticResource PressableButtonStyle}"
+                        TextColor="White"
+                        Background="Purple">
                     </Button>
                     <CheckBox
-                        IsChecked="{Binding EnableAutoAddSuffixes}">
+                        IsChecked="{Binding EnableAutoAddSuffixes}"
+                        Color="Purple">
                     </CheckBox>
-                </HorizontalStackLayout>          
+                </HorizontalStackLayout>
             </HorizontalStackLayout>
 
             <HorizontalStackLayout HorizontalOptions="Center">
-                    <Button
+                <Button
                         Text="Random"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.NewGameCommand}"
                         CommandParameter="{x:Static sys:Boolean.FalseString}"
@@ -602,9 +604,9 @@
                         BackgroundColor="Azure"
                         Style="{StaticResource PressableButtonStyle}"
                         Margin="0,0,10,0">
-                    </Button>
+                </Button>
 
-                    <Button
+                <Button
                         Text="Daily"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.NewGameCommand}"
                         CommandParameter="{x:Static sys:Boolean.TrueString}"
@@ -614,16 +616,16 @@
                         BackgroundColor="Azure"
                         Style="{StaticResource PressableButtonStyle}"
                         Margin="10,0,0,0">
-                    </Button>
-                </HorizontalStackLayout>
+                </Button>
+            </HorizontalStackLayout>
 
-                <Label
+            <Label
                     HorizontalOptions="Center"
                     Margin="0,5,0,0"
                     IsVisible="{Binding Loading.IsLoading}"
                     TextColor="Green">
-                    Loading ...
-                </Label>
-            </VerticalStackLayout>
+                Loading ...
+            </Label>
+        </VerticalStackLayout>
     </Grid>
 </ContentPage>

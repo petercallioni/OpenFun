@@ -65,7 +65,6 @@ namespace Pangram.PageModels
             "es",
             "ed",
             "er",
-            "ing",
             "s"
         };
 
@@ -444,10 +443,10 @@ namespace Pangram.PageModels
                     }
 
                     sidebar.UpdateScore(gameModel!.Score);
-                    
+
                 }
             }
-            
+
             _ = SaveOrUpdateCurrentChallenge();
         }
 
