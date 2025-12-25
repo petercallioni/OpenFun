@@ -1,11 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui.Animations;
 using OpenFun_Core.Abstractions;
 using OpenFun_Core.Models;
 using OpenFun_Core.Services;
 using Pangram.Components;
 using Pangram.Models;
 using System.Collections.ObjectModel;
+using System.Text;
 
 namespace Pangram.PageModels
 {
@@ -30,6 +32,56 @@ namespace Pangram.PageModels
         private List<char> otherCharacters;
         private char primeCharacter;
         private String currentWord;
+        private bool showAutoAddSuffixes;
+        public bool ShowAutoAddSuffixes
+        {
+            get => showAutoAddSuffixes;
+            set
+            {
+                if (showAutoAddSuffixes != value)
+                {
+                    showAutoAddSuffixes = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private bool enableAutoAddSuffixes;
+        public bool EnableAutoAddSuffixes
+        {
+            get => enableAutoAddSuffixes;
+            set
+            {
+                if (enableAutoAddSuffixes != value)
+                {
+                    enableAutoAddSuffixes = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private List<string> autoAddSuffixes = new List<string>
+        {
+            "es",
+            "ed",
+            "er",
+            "ing",
+            "s"
+        };
+
+        private List<string> availableAutoAddSuffixes;
+        public List<string> AvailableAutoAddSuffixes
+        {
+            get => availableAutoAddSuffixes;
+            set
+            {
+                if (availableAutoAddSuffixes != value)
+                {
+                    availableAutoAddSuffixes = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         public List<char> OtherCharacters
         {
@@ -134,6 +186,9 @@ namespace Pangram.PageModels
             primeCharacter = '\0';
             gameModel = new GameModel(new MauiFileProvider(), new DailySeed());
             loadHistory = LoadHistory();
+            availableAutoAddSuffixes = new List<string>();
+            ShowAutoAddSuffixes = false;
+            EnableAutoAddSuffixes = false;
             canRevealWord = false;
         }
 
@@ -211,7 +266,9 @@ namespace Pangram.PageModels
                 else
                 {
                     FoundPangramWord = "";
-                    CanRevealWord = DateTime.UtcNow.AddDays(-1).Date >= data.Date.Date;
+
+                    // Only allow revealing the word for daily challenges after the day has passed
+                    CanRevealWord = DateTime.Now.AddDays(-1).Date >= data.Date.ToLocalTime().Date;
                 }
 
                 OtherCharacters = gameModel.WordLetterSequence!.Letters
@@ -227,6 +284,9 @@ namespace Pangram.PageModels
 
                 Sidebar.UpdateScore(gameModel.Score);
                 Sidebar.UpdateMaxScore(gameModel.MaxScore);
+
+                AvailableAutoAddSuffixes = suffixesAvailable();
+                ShowAutoAddSuffixes = AvailableAutoAddSuffixes.Count > 0;
 
                 History.ClosePangramDetail(data);
                 History.IsVisible = false;
@@ -285,6 +345,10 @@ namespace Pangram.PageModels
                     .Skip(1)
                     .Select(x => char.ToUpper(x))
                     .ToList();
+
+                AvailableAutoAddSuffixes = suffixesAvailable();
+                ShowAutoAddSuffixes = AvailableAutoAddSuffixes.Count > 0;
+
                 loading.HasLoaded = true;
             }
             catch (Exception ex)
@@ -334,7 +398,7 @@ namespace Pangram.PageModels
             {
                 CurrentWord = CurrentWord.Remove(CurrentWord.Length - 1, 1);
             }
-            
+
             LastGuessResult = GuessWordResults.NONE;
         }
 
@@ -346,24 +410,45 @@ namespace Pangram.PageModels
                 return; // Do nothing
             }
 
-            LastGuessResult = await gameModel.GuessWord(currentWord);
+            List<string> wordsToCheck = new List<string>();
+            wordsToCheck.Add(currentWord);
 
-            if (LastGuessResult == GuessWordResults.VALID || LastGuessResult == GuessWordResults.VALID_PANGRAM)
+            if (EnableAutoAddSuffixes)
             {
-                gameModel?.GuessedWords?.Where(word => !GuessedWords.Contains(word.ToUpper()))
-                                      .ToList()
-                                      .ForEach(word => GuessedWords.Add(word.ToUpper()));
-
-                CurrentWord = string.Empty;
-
-                if (gameModel?.FoundPangramWord != null)
+                foreach (string suffix in AvailableAutoAddSuffixes)
                 {
-                    FoundPangramWord = gameModel.FoundPangramWord.ToUpper();
+                    wordsToCheck.Add(currentWord + suffix);
+                }
+            }
+
+            for (int i = 0; i < wordsToCheck.Count; i++)
+            {
+                var result = await gameModel.GuessWord(wordsToCheck[i]);
+
+                if (i == 0)
+                {
+                    LastGuessResult = result;
                 }
 
-                sidebar.UpdateScore(gameModel!.Score);
-                _ = SaveOrUpdateCurrentChallenge();
+                if (result == GuessWordResults.VALID || result == GuessWordResults.VALID_PANGRAM)
+                {
+                    gameModel?.GuessedWords?.Where(word => !GuessedWords.Contains(word.ToUpper()))
+                                          .ToList()
+                                          .ForEach(word => GuessedWords.Add(word.ToUpper()));
+
+                    CurrentWord = string.Empty;
+
+                    if (gameModel?.FoundPangramWord != null)
+                    {
+                        FoundPangramWord = gameModel.FoundPangramWord.ToUpper();
+                    }
+
+                    sidebar.UpdateScore(gameModel!.Score);
+                    
+                }
             }
+            
+            _ = SaveOrUpdateCurrentChallenge();
         }
 
         [RelayCommand]
@@ -374,6 +459,22 @@ namespace Pangram.PageModels
             await databaseService.AddOrUpdateAsync<PangramData>(data, word => word.LetterSequence == data.LetterSequence);
 
             _ = LoadHistory();
+        }
+
+        [RelayCommand]
+        private async Task DisplayAvailableSuffixes()
+        {
+            StringBuilder message = new StringBuilder("If enabled using the checkbox, automatically submits words using your word and the list of suffixes below:\n");
+
+            foreach (string suffix in AvailableAutoAddSuffixes)
+            {
+                message.AppendLine($"\"{suffix}\"");
+            }
+
+            await dialogService.DisplayAlertAsync(
+                "Suffixes",
+                message.ToString()
+            );
         }
 
         private async Task LoadHistory()
@@ -388,6 +489,51 @@ namespace Pangram.PageModels
                 errorHandler.HandleError(ex);
                 return;
             }
+        }
+
+        private List<string> suffixesAvailable()
+        {
+            List<string> availableSuffixes = new List<string>();
+            // Check if any of the auto add suffixes can be made with the current letters
+            foreach (string suffix in autoAddSuffixes)
+            {
+                Dictionary<char, int> letterCounts = new Dictionary<char, int>();
+
+                if (gameModel!.WordLetterSequence == null)
+                {
+                    return availableSuffixes;
+                }
+
+                // Count letters in the current word
+                foreach (char c in gameModel.WordLetterSequence.Letters)
+                {
+                    if (letterCounts.ContainsKey(c))
+                    {
+                        letterCounts[c]++;
+                    }
+                    else
+                    {
+                        letterCounts[c] = 1;
+                    }
+                }
+                // Check if we can make the suffix
+                bool canMake = true;
+                foreach (char c in suffix)
+                {
+                    if (!letterCounts.ContainsKey(c) || letterCounts[c] == 0)
+                    {
+                        canMake = false;
+                        break;
+                    }
+                    letterCounts[c]--;
+                }
+                if (canMake)
+                {
+                    availableSuffixes.Add(suffix);
+                }
+            }
+
+            return availableSuffixes;
         }
     }
 }
