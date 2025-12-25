@@ -134,14 +134,55 @@
                                 Converter={StaticResource IsStringNotNullOrEmptyConverter}, 
                                 ConverterParameter={x:Static sys:Boolean.TrueString}
                      }">
-                    <Label 
+                    <HorizontalStackLayout>
+                        <Label 
                             Text="{Binding FoundPangramWord}"         
                             FontFamily="IBMPlexMonoRegular"
                             FontSize="40"
+                            FontAutoScalingEnabled="True"
                             TextColor="Orange"
                             VerticalOptions="Center" 
-                            HorizontalOptions="Center" 
-                            />
+                            HorizontalOptions="Center"/>
+
+                        <Border
+                            WidthRequest="60"
+                            HeightRequest="60"
+                            Grid.Column="1"
+                            Margin="10,0,0,0"
+                            Background="Transparent"
+                            Stroke="Transparent">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="VisualStateManager.VisualStateGroups">
+                                        <VisualStateGroupList>
+                                            <VisualStateGroup x:Name="CommonStates">
+                                                <VisualState x:Name="Normal" />
+                                                <VisualState x:Name="PointerOver">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="Background" Value="#FFF400" />
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                                <VisualState x:Name="Pressed">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="Background" Value="#BBA700" />
+                                                        <Setter Property="Scale" Value="0.98" />
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                            </VisualStateGroup>
+                                        </VisualStateGroupList>
+                                    </Setter>
+                                </Style>
+                            </Border.Style>
+                            <Image Source="garbage_can.png"
+                                                        Aspect="Fill">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer 
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCurrentGameCommand}"/>
+                                </Image.GestureRecognizers>
+                            </Image>
+                        </Border>
+                    </HorizontalStackLayout>
+
                 </Border>
 
                 <Button
@@ -164,6 +205,7 @@
                         Stroke="{Binding LastGuess.Colour}">
                 <Label
                     Text="{Binding CurrentWord}"
+                    FontAutoScalingEnabled="True"
                     FontSize="25"
                         TextColor="White"
                     HorizontalOptions="Center">

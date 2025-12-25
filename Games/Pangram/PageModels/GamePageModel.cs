@@ -227,6 +227,46 @@ namespace Pangram.PageModels
         }
 
         [RelayCommand]
+        private async Task DeleteCurrentGame()
+        {
+            bool confirmed = await dialogService.DisplayConfirmationAsync(
+                "Delete Game",
+                "Are you sure you want to delete this game?",
+                "Delete",
+                "Cancel"
+            );
+
+            if (confirmed)
+            {
+                var game = History.PangramHistory
+                    .Where(item => item.PangramData.Date == gameModel.CreatedDate)
+                    .ToList()
+                    .FirstOrDefault();
+
+                if (game != null)
+                {
+                    History.PangramHistory.Remove(game);
+                    _ = databaseService.DeleteAsync<PangramData>(game.PangramData.Id);
+
+                    LastGuessResult = GuessWordResults.NONE;
+                    CurrentWord = string.Empty;
+                    OtherCharacters = new List<char>();
+                    PrimeCharacter = '\0';
+                    AvailableAutoAddSuffixes = new List<string>();
+                    ShowAutoAddSuffixes = false;
+                    ShowAutoAddSuffixes = false;
+                    EnableAutoAddSuffixes = false;
+                    CanRevealWord = false;
+                    Loading.HasLoaded = false;
+                    FoundPangramWord = "";
+                    GuessedWords.Clear();
+                    Sidebar.UpdateScore(0);
+                    Sidebar.UpdateMaxScore(0);
+                }
+            }
+        }
+
+        [RelayCommand]
         private async Task LoadGame(PangramData data)
         {
             bool confirmed = await dialogService.DisplayConfirmationAsync(
@@ -307,6 +347,12 @@ namespace Pangram.PageModels
             bool newGameIsDaily = bool.Parse(daily);
             try
             {
+                // Save current challenge if one is loaded
+                if (Loading.HasLoaded)
+                {
+                    await SaveOrUpdateCurrentChallenge();
+                }
+
                 await loadHistory; // Ensure history is loaded
                 if (newGameIsDaily)
                 {
