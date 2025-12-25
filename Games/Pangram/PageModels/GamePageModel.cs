@@ -65,6 +65,7 @@ namespace Pangram.PageModels
             "es",
             "ed",
             "er",
+            "ee",
             "s"
         };
 
@@ -497,6 +498,7 @@ namespace Pangram.PageModels
 
                 if (i == 0)
                 {
+                    // Only display the result from the word the user entered
                     LastGuessResult = result;
                 }
 
@@ -514,7 +516,11 @@ namespace Pangram.PageModels
                     }
 
                     sidebar.UpdateScore(gameModel!.Score);
-
+                }
+                else if (i == 0)
+                {
+                    // If the first word was not valid, do not attempt the variations
+                    return;
                 }
             }
 
@@ -534,7 +540,7 @@ namespace Pangram.PageModels
         [RelayCommand]
         private async Task DisplayAvailableSuffixes()
         {
-            StringBuilder message = new StringBuilder("If enabled using the checkbox, automatically submits words using your word and the list of suffixes below:\n");
+            StringBuilder message = new StringBuilder("If enabled using the checkbox and submitted word is scored, additionally scroes words using your word with the below suffixes:\n");
 
             foreach (string suffix in AvailableAutoAddSuffixes)
             {
