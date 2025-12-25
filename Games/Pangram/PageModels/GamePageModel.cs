@@ -283,8 +283,7 @@ namespace Pangram.PageModels
                     Loading.HasLoaded = false;
                     FoundPangramWord = "";
                     GuessedWords.Clear();
-                    Sidebar.UpdateScore(0);
-                    Sidebar.UpdateMaxScore(0);
+                    Sidebar.Update(gameModel);
                 }
             }
         }
@@ -344,8 +343,7 @@ namespace Pangram.PageModels
                 GuessedWords.Clear();
                 gameModel.GuessedWords?.ForEach(word => GuessedWords.Add(word.ToUpper()));
 
-                Sidebar.UpdateScore(gameModel.Score);
-                Sidebar.UpdateMaxScore(gameModel.MaxScore);
+                Sidebar.Update(gameModel);
 
                 AvailableAutoAddSuffixes = suffixesAvailable();
                 ShowAutoAddSuffixes = AvailableAutoAddSuffixes.Count > 0;
@@ -434,8 +432,7 @@ namespace Pangram.PageModels
             LastGuessResult = GuessWordResults.NONE;
 
             GuessedWords.Clear();
-            Sidebar.UpdateScore(0);
-            Sidebar.UpdateMaxScore(await gameModel.FindMaxWords());
+            Sidebar.Update(gameModel);
 
             await SaveOrUpdateCurrentChallenge(); // Adds the game to the history
         }
@@ -515,7 +512,7 @@ namespace Pangram.PageModels
                         FoundPangramWord = gameModel.FoundPangramWord.ToUpper();
                     }
 
-                    sidebar.UpdateScore(gameModel!.Score);
+                    Sidebar.Update(gameModel);
                 }
                 else if (i == 0)
                 {
@@ -535,6 +532,12 @@ namespace Pangram.PageModels
             await databaseService.AddOrUpdateAsync<PangramData>(data, word => word.LetterSequence == data.LetterSequence);
 
             _ = LoadHistory();
+        }
+
+        [RelayCommand]
+        private void ToggleSidebarVisibility()
+        {
+            Sidebar.ToggleAndUpdate(gameModel);
         }
 
         [RelayCommand]

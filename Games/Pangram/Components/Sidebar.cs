@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Pangram.Models;
 
 namespace Pangram.Components
 {
@@ -7,14 +8,10 @@ namespace Pangram.Components
     {
         private string displayText;
         private bool isVisible;
-        private int score;
-        private int maxScore;
 
         public Sidebar()
         {
             displayText = "Score: ";
-            score = 0;
-            maxScore = -1;
             isVisible = false;
         }
 
@@ -44,36 +41,23 @@ namespace Pangram.Components
             }
         }
 
-        public void SetDisplayText()
+        public void Update(GameModel gameModel)
         {
             string text = IsVisible ? "Hide:" : "Score:";
-            text += $" {score}";
+            text += $" {gameModel.Score}";
 
-            if (maxScore > 0)
+            if (gameModel.MaxScore > 0)
             {
-                text += $" / {maxScore}";
+                text += $" / {gameModel.MaxScore}";
             }
 
             DisplayText = text;
         }
 
-        public void UpdateScore(int newScore)
-        {
-            score = newScore;
-            SetDisplayText();
-        }
-
-        public void UpdateMaxScore(int newMaxScore)
-        {
-            maxScore = newMaxScore;
-            SetDisplayText();
-        }
-
-        [RelayCommand]
-        private void ToggleVisibility()
+        public void ToggleAndUpdate(GameModel gameModel)
         {
             IsVisible = !IsVisible;
-            SetDisplayText();
+            Update(gameModel);
         }
     }
 }
