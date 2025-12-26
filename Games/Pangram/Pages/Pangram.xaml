@@ -201,6 +201,7 @@
 
             <Border x:Name="CurrentWordBorder"
                         Padding="5"
+                        HeightRequest="50"
                         Background="Transparent"
                         StrokeThickness="4"
                         Stroke="{Binding LastGuess.Colour}">
@@ -233,7 +234,7 @@
 
                 <AbsoluteLayout
                     Grid.Column="0"
-                    Margin="0,0,10,0"
+                    Margin="0,0,5,0"
                     HorizontalOptions="End">
                     <Button
                         Text="{Binding Sidebar.DisplayText}"
@@ -241,7 +242,7 @@
                         TextColor="Black"
                         BackgroundColor="Azure"
                         Style="{StaticResource PressableButtonStyle}"
-                        WidthRequest="125"
+                        WidthRequest="145"
 
                         HorizontalOptions="Center"
                         Grid.Column="0">
@@ -284,8 +285,8 @@
                         TextColor="Black"
                         BackgroundColor="Azure"
                         Style="{StaticResource PressableButtonStyle}"
-                        WidthRequest="125"
-                        Margin="10,0,0,0"
+                        WidthRequest="145"
+                        Margin="5,0,0,0"
                         Grid.Column="1">
                     <Button.Triggers>
                         <DataTrigger TargetType="Button"
@@ -307,31 +308,36 @@
             <VerticalStackLayout 
                 HorizontalOptions="Fill" 
                 VerticalOptions="Fill"
-                WidthRequest="275" >
+                WidthRequest="300">
 
                 <Border
-                    Background="Gray"
+                    Background="Black"
                     Margin="0,5,0,0"
-                    Padding="5,0,5,0"
+                    Padding="5,5,5,5"
                     VerticalOptions="Fill"
                     IsVisible="{Binding Sidebar.IsVisible}"
                     MaximumHeightRequest="400">
-                    <ListView ItemsSource="{Binding GuessedWords}"
-                        HorizontalOptions="Start">
-                        <ListView.ItemTemplate>
+                    <CollectionView ItemsSource="{Binding GuessedWords}">
+                        <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <ViewCell>
-                                    <Label 
-                                        Text="{Binding .}" 
-                                        FontSize="15" 
-                                        TextColor="White" 
-                                        VerticalOptions="Center" 
-                                        HorizontalOptions="Center" 
-                                        Padding="0,0,0,0" />
-                                </ViewCell>
+                                <VerticalStackLayout>
+                                     <Label 
+                                            Text="{Binding .}" 
+                                            FontSize="15" 
+                                            TextColor="White" 
+                                            VerticalOptions="Center" 
+                                            HorizontalOptions="Center" 
+                                            Padding="0,0,0,0" />
+                                    <Rectangle 
+                                        WidthRequest="500"
+                                        HeightRequest="2"
+                                        BackgroundColor="White"
+                                        HorizontalOptions="Center"/>
+                                </VerticalStackLayout>
+
                             </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
                 </Border>
             </VerticalStackLayout>
 
@@ -339,7 +345,7 @@
             <VerticalStackLayout 
                 HorizontalOptions="Fill" 
                 VerticalOptions="Fill"
-                WidthRequest="275"
+                WidthRequest="300"
                 IsVisible="{Binding History.IsVisible}">
                 <Button
                     Style="{StaticResource PressableButtonStyle}"
@@ -706,15 +712,6 @@
                         IsChecked="{Binding EnableAutoAddSuffixes}"
                         Color="White"
                         Margin="5,0,0,0">
-
-                        <!--<CheckBox.Triggers>
-                                <DataTrigger TargetType="CheckBox"
-                                             Binding="{Binding Path=EnableAutoAddSuffixes}"
-                                             Value="{x:Static sys:Boolean.TrueString}">
-                                    <Setter Property="Background" Value="Black"/>
-                                </DataTrigger>
-                            </CheckBox.Triggers>-->
-
                     </CheckBox>
                 </HorizontalStackLayout>
             </HorizontalStackLayout>
