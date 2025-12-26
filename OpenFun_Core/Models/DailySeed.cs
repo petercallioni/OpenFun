@@ -5,7 +5,7 @@
         public int GetDailySeed()
         {
             // Adjust the current UTC date and time by 10 hours
-            DateTime adjustedDateTime = DateTime.UtcNow.AddHours(10);
+            DateTime adjustedDateTime = DateTime.UtcNow.Date.AddHours(10);
 
             // Get only the date part (ignoring the time) and convert to an integer representation
             DateTime adjustedDate = adjustedDateTime.Date; // Keep only the date component
