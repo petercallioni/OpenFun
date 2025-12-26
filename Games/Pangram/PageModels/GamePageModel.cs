@@ -6,6 +6,8 @@ using OpenFun_Core.Services;
 using Pangram.Components;
 using Pangram.Models;
 using System.Collections.ObjectModel;
+using System.Net.Http;
+using System.Text.Json;
 using System.Text;
 
 namespace Pangram.PageModels
@@ -17,6 +19,9 @@ namespace Pangram.PageModels
         private readonly ObservableCollection<string> guessedWords = new ObservableCollection<string>();
         private readonly DatabaseService databaseService;
         private readonly DialogService dialogService;
+
+        // Reusable HttpClient for lookups
+        private static readonly HttpClient httpClient = new HttpClient();
 
         // Components
         private readonly Sidebar sidebar = new Sidebar();
@@ -624,6 +629,107 @@ namespace Pangram.PageModels
             }
 
             return availableSuffixes;
+        }
+
+        [RelayCommand]
+        private async Task LookupWord(string word)
+        {
+            if (string.IsNullOrWhiteSpace(word))
+            {
+                await dialogService.DisplayAlertAsync("Lookup", "No word provided to lookup.");
+                return;
+            }
+
+            try
+            {
+                string query = Uri.EscapeDataString(word.Trim());
+                string url = $"https://api.dictionaryapi.dev/api/v2/entries/en/{query}";
+
+                using var resp = await httpClient.GetAsync(url);
+
+                if (!resp.IsSuccessStatusCode)
+                {
+                    await dialogService.DisplayAlertAsync("Lookup", $"No definition found for '{word}'.");
+                    return;
+                }
+
+                await using var stream = await resp.Content.ReadAsStreamAsync();
+                using var doc = await JsonDocument.ParseAsync(stream);
+
+                var root = doc.RootElement;
+                if (root.ValueKind != JsonValueKind.Array || root.GetArrayLength() == 0)
+                {
+                    await dialogService.DisplayAlertAsync("Lookup", $"No definition found for '{word}'.");
+                    return;
+                }
+
+                var first = root[0];
+                var sb = new StringBuilder();
+
+                if (first.TryGetProperty("word", out var w) && w.ValueKind == JsonValueKind.String)
+                {
+                    sb.AppendLine(w.GetString());
+                }
+
+                if (first.TryGetProperty("phonetic", out var phonetic) && phonetic.ValueKind == JsonValueKind.String)
+                {
+                    sb.AppendLine(phonetic.GetString());
+                }
+
+                if (first.TryGetProperty("meanings", out var meanings) && meanings.ValueKind == JsonValueKind.Array)
+                {
+                    int meaningIndex = 1;
+                    foreach (var m in meanings.EnumerateArray())
+                    {
+                        if (m.TryGetProperty("partOfSpeech", out var pos) && pos.ValueKind == JsonValueKind.String)
+                        {
+                            sb.AppendLine($"{meaningIndex}. {pos.GetString()}");
+                        }
+
+                        if (m.TryGetProperty("definitions", out var defs) && defs.ValueKind == JsonValueKind.Array)
+                        {
+                            int defIndex = 1;
+                            foreach (var d in defs.EnumerateArray())
+                            {
+                                if (d.TryGetProperty("definition", out var defVal) && defVal.ValueKind == JsonValueKind.String)
+                                {
+                                    sb.AppendLine($"   {defIndex}. {defVal.GetString()}");
+                                    defIndex++;
+                                }
+
+                                if (d.TryGetProperty("example", out var ex) && ex.ValueKind == JsonValueKind.String)
+                                {
+                                    sb.AppendLine($"       Example: {ex.GetString()}");
+                                }
+                            }
+                        }
+
+                        sb.AppendLine();
+                        meaningIndex++;
+                    }
+                }
+
+                var message = sb.ToString().Trim();
+                if (string.IsNullOrWhiteSpace(message))
+                {
+                    message = "No details available.";
+                }
+
+                // Limit the size of the message to avoid extremely long alerts
+                const int maxLength = 4000;
+                if (message.Length > maxLength)
+                {
+                    message = message.Substring(0, maxLength) + "\n... (truncated)";
+                }
+
+                await dialogService.DisplayAlertAsync($"Lookup: {word}", message);
+            }
+            catch (Exception ex)
+            {
+                // Report error via the app's error handler and also show a simple message
+                errorHandler.HandleError(ex);
+                await dialogService.DisplayAlertAsync("Lookup Error", "An error occurred while looking up the word.");
+            }
         }
     }
 }
