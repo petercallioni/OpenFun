@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Maui.Animations;
 using OpenFun_Core.Abstractions;
 using OpenFun_Core.Models;
 using OpenFun_Core.Services;
@@ -435,6 +434,17 @@ namespace Pangram.PageModels
             Sidebar.Update(gameModel);
 
             await SaveOrUpdateCurrentChallenge(); // Adds the game to the history
+
+            Task<int> max = gameModel.FindMaxWords();
+
+            _ = max.ContinueWith(t =>
+            {
+                if (t.IsCompletedSuccessfully)
+                {
+                    Sidebar.Update(gameModel);
+                    _ = SaveOrUpdateCurrentChallenge();
+                }
+            });
         }
 
         [RelayCommand]

@@ -208,7 +208,7 @@
                     Text="{Binding CurrentWord}"
                     FontAutoScalingEnabled="True"
                     FontSize="25"
-                        TextColor="White"
+                    TextColor="White"
                     HorizontalOptions="Center">
                 </Label>
             </Border>
@@ -220,7 +220,8 @@
                     HorizontalOptions="Center"
                     Margin="0,5,0,10"/>
 
-            <Grid>
+            <Grid
+                  HorizontalOptions="Center">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
@@ -230,22 +231,52 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Button
+                <AbsoluteLayout
+                    Grid.Column="0"
+                    Margin="0,0,10,0"
+                    HorizontalOptions="End">
+                    <Button
                         Text="{Binding Sidebar.DisplayText}"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ToggleSidebarVisibilityCommand}"
                         TextColor="Black"
                         BackgroundColor="Azure"
                         Style="{StaticResource PressableButtonStyle}"
-                        Margin="0,5,5,0"
+                        WidthRequest="125"
+
+                        HorizontalOptions="Center"
                         Grid.Column="0">
-                    <Button.Triggers>
-                        <DataTrigger TargetType="Button"
-                                     Binding="{Binding Path=Sidebar.IsVisible}"
-                                     Value="{x:Static sys:Boolean.TrueString}">
-                            <Setter Property="BackgroundColor" Value="Chocolate"/>
-                        </DataTrigger>
-                    </Button.Triggers>
-                </Button>
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button"
+                                         Binding="{Binding Path=Sidebar.IsVisible}"
+                                         Value="{x:Static sys:Boolean.TrueString}">
+                                <Setter Property="BackgroundColor" Value="Chocolate"/>
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+
+                    <Grid
+                        TranslationX="115"
+                        TranslationY="-5"
+                        WidthRequest="20"
+                        HeightRequest="20"
+                        IsVisible="{Binding Sidebar.Rank,
+                                        Converter={StaticResource IsStringNotNullOrEmptyConverter}, 
+                                        ConverterParameter={x:Static sys:Boolean.TrueString}}">
+
+                        <Ellipse
+                            Fill="Green"/>
+
+                        <Label Text="{Binding Sidebar.Rank}"
+                            Padding="1,1,0,0"
+                            HorizontalOptions="Center"
+                            FontAutoScalingEnabled="True"
+                            FontFamily="OpenSansSemibold"
+                            TextColor="White"
+                            FontSize="12">
+                        </Label>
+                    </Grid>
+
+                </AbsoluteLayout>
 
                 <Button
                         Text="History" 
@@ -253,7 +284,8 @@
                         TextColor="Black"
                         BackgroundColor="Azure"
                         Style="{StaticResource PressableButtonStyle}"
-                        Margin="5,5,0,0"
+                        WidthRequest="125"
+                        Margin="10,0,0,0"
                         Grid.Column="1">
                     <Button.Triggers>
                         <DataTrigger TargetType="Button"
@@ -667,10 +699,22 @@
                         Style="{StaticResource PressableButtonStyle}"
                         TextColor="White"
                         Background="Purple">
+
                     </Button>
+
                     <CheckBox
                         IsChecked="{Binding EnableAutoAddSuffixes}"
-                        Color="Purple">
+                        Color="White"
+                        Margin="5,0,0,0">
+
+                        <!--<CheckBox.Triggers>
+                                <DataTrigger TargetType="CheckBox"
+                                             Binding="{Binding Path=EnableAutoAddSuffixes}"
+                                             Value="{x:Static sys:Boolean.TrueString}">
+                                    <Setter Property="Background" Value="Black"/>
+                                </DataTrigger>
+                            </CheckBox.Triggers>-->
+
                     </CheckBox>
                 </HorizontalStackLayout>
             </HorizontalStackLayout>
