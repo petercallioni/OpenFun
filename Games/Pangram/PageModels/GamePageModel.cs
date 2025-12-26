@@ -312,7 +312,7 @@ namespace Pangram.PageModels
 
                 Loading.IsLoading = true;
                 Loading.HasLoaded = false;
-
+                Sidebar.ClearRank();
                 await gameModel.LoadSavedGame(data);
 
                 Loading.IsLoading = false;
@@ -406,6 +406,7 @@ namespace Pangram.PageModels
 
                 loading.IsLoading = true;
                 loading.HasLoaded = false;
+                Sidebar.ClearRank();
                 await gameModel.InitialiseGame(newGameIsDaily);
                 FoundPangramWord = "";
                 PrimeCharacter = char.ToUpper(gameModel.WordLetterSequence!.Letters[0]);
@@ -545,7 +546,7 @@ namespace Pangram.PageModels
         }
 
         [RelayCommand]
-        private void ToggleSidebarVisibility()
+        private async Task ToggleSidebarVisibility()
         {
             Sidebar.ToggleAndUpdate(gameModel);
         }

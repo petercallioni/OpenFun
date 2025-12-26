@@ -256,13 +256,12 @@
                     </Button>
 
                     <Grid
-                        TranslationX="115"
+                        TranslationX="130"
                         TranslationY="-5"
                         WidthRequest="20"
                         HeightRequest="20"
-                        IsVisible="{Binding Sidebar.Rank,
-                                        Converter={StaticResource IsStringNotNullOrEmptyConverter}, 
-                                        ConverterParameter={x:Static sys:Boolean.TrueString}}">
+              
+                        IsVisible="{Binding Sidebar.RankVisible}">
 
                         <Ellipse
                             Fill="Green"/>
@@ -276,7 +275,6 @@
                             FontSize="12">
                         </Label>
                     </Grid>
-
                 </AbsoluteLayout>
 
                 <Button
@@ -321,7 +319,7 @@
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <VerticalStackLayout>
-                                     <Label 
+                                    <Label 
                                             Text="{Binding .}" 
                                             FontSize="15" 
                                             TextColor="White" 

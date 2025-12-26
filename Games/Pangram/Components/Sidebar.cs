@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.VisualBasic;
 using Pangram.Models;
 
 namespace Pangram.Components
@@ -10,12 +11,26 @@ namespace Pangram.Components
         private string displayText;
         private bool isVisible;
         private string rank;
+        private bool _rankVisible;
+        public bool RankVisible
+        {
+            get => _rankVisible;
+            set
+            {
+                if (_rankVisible != value)
+                {
+                    _rankVisible = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         public Sidebar()
         {
             displayText = baseText;
             isVisible = false;
             rank = "";
+            _rankVisible = false;
         }
 
         public string Rank
@@ -26,6 +41,7 @@ namespace Pangram.Components
                 if (rank != value)
                 {
                     rank = value;
+                    RankVisible = !string.IsNullOrEmpty(rank);
                     OnPropertyChanged();
                 }
             }
@@ -68,18 +84,19 @@ namespace Pangram.Components
             IsVisible = !IsVisible;
             Update(gameModel);
         }
-        
+
         private void setRank(int score, int maxScore, bool gotPangram)
         {
+            string rankText = "";
             if (score <= 0 || maxScore <= 0)
             {
                 Rank = "";
                 return;
             }
 
-            double percentage = (double) score / (double) maxScore * 100;
+            double percentage = (double)score / (double)maxScore * 100;
 
-            rank = percentage switch
+            rankText = percentage switch
             {
                 >= 70 => "S",
                 >= 60 => "A",
@@ -91,10 +108,17 @@ namespace Pangram.Components
                 _ => ""
             };
 
-            if (gotPangram)
+            if (gotPangram && !"".Equals(rankText))
             {
-                Rank = rank + "+";
+                rankText += "+";
             }
+
+            Rank = rankText;
+        }
+
+        public void ClearRank()
+        {
+            Rank = "";
         }
     }
 }
