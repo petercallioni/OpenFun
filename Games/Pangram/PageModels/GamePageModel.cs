@@ -559,7 +559,7 @@ namespace Pangram.PageModels
         [RelayCommand]
         private async Task DisplayAvailableSuffixes()
         {
-            StringBuilder message = new StringBuilder("If enabled using the checkbox and submitted word is scored, additionally scroes words using your word with the below suffixes:\n");
+            StringBuilder message = new StringBuilder("If enabled using the checkbox, and the submitted word is scored, additionally scores words using your word with the below suffixes:\n");
 
             foreach (string suffix in AvailableAutoAddSuffixes)
             {
