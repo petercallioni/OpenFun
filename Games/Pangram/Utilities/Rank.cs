@@ -8,7 +8,7 @@ namespace Pangram.Utilities
 {
     public static class Rank
     {
-        public static string GetRank(int score, int maxScore, bool gotPangram)
+        public static string GetRank(int score, int maxScore)
         {
             string rankText = "";
             if (score <= 0 || maxScore <= 0)
@@ -20,6 +20,7 @@ namespace Pangram.Utilities
 
             rankText = percentage switch
             {
+                >= 90 => "S",
                 >= 80 => "S",
                 >= 70 => "A",
                 >= 60 => "B",
@@ -30,10 +31,6 @@ namespace Pangram.Utilities
                 _ => ""
             };
 
-            if (gotPangram && !"".Equals(rankText))
-            {
-                rankText += "+";
-            }
             return rankText;
         }
     }

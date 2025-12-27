@@ -15,7 +15,7 @@ namespace Pangram.PageModels
         {
             this.pangramData = pangramData;
             isVisible = false;
-            rank = Utilities.Rank.GetRank(pangramData.GetGuessedWordsList().Count, pangramData.MaxScore, pangramData.GotPangram);
+            rank = Utilities.Rank.GetRank(pangramData.GetGuessedWordsList().Count, pangramData.MaxScore);
         }
 
         public string Rank

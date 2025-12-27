@@ -75,7 +75,7 @@ namespace Pangram.Components
         public void Update(GameModel gameModel)
         {
             string text = $"{baseText}{gameModel.Score}";
-            Rank = Utilities.Rank.GetRank(gameModel.Score, gameModel.MaxScore, !string.IsNullOrEmpty(gameModel.FoundPangramWord));
+            Rank = Utilities.Rank.GetRank(gameModel.Score, gameModel.MaxScore);
             DisplayText = text;
         }
 
