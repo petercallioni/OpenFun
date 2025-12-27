@@ -7,12 +7,28 @@ namespace Pangram.PageModels
     public partial class PangramDataVM : ObservableObject
     {
         private bool isVisible;
+        private string rank;
+
         private PangramData pangramData;
 
         public PangramDataVM(PangramData pangramData)
         {
             this.pangramData = pangramData;
             isVisible = false;
+            rank = Utilities.Rank.GetRank(pangramData.GetGuessedWordsList().Count, pangramData.MaxScore, pangramData.GotPangram);
+        }
+
+        public string Rank
+        {
+            get => rank;
+            set
+            {
+                if (rank != value)
+                {
+                    rank = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
         public bool IsVisible

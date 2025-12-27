@@ -75,7 +75,7 @@ namespace Pangram.Components
         public void Update(GameModel gameModel)
         {
             string text = $"{baseText}{gameModel.Score}";
-            setRank(gameModel.Score, gameModel.MaxScore, !string.IsNullOrEmpty(gameModel.FoundPangramWord));
+            Rank = Utilities.Rank.GetRank(gameModel.Score, gameModel.MaxScore, !string.IsNullOrEmpty(gameModel.FoundPangramWord));
             DisplayText = text;
         }
 
@@ -83,37 +83,6 @@ namespace Pangram.Components
         {
             IsVisible = !IsVisible;
             Update(gameModel);
-        }
-
-        private void setRank(int score, int maxScore, bool gotPangram)
-        {
-            string rankText = "";
-            if (score <= 0 || maxScore <= 0)
-            {
-                Rank = "";
-                return;
-            }
-
-            double percentage = (double)score / (double)maxScore * 100;
-
-            rankText = percentage switch
-            {
-                >= 80 => "S",
-                >= 70 => "A",
-                >= 60 => "B",
-                >= 50 => "C",
-                >= 40 => "D",
-                >= 30 => "E",
-                >= 20 => "F",
-                _ => ""
-            };
-
-            if (gotPangram && !"".Equals(rankText))
-            {
-                rankText += "+";
-            }
-
-            Rank = rankText;
         }
 
         public void ClearRank()

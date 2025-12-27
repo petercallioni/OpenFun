@@ -435,6 +435,25 @@
                                                 IsVisible="{Binding PangramData.GotPangram}">
                                             </Image>
 
+                                            <Grid 
+                                                WidthRequest="20"
+                                                HeightRequest="20"
+                                                HorizontalOptions="Center"
+                                                Margin="0,0,5,0"
+                                                IsVisible="{Binding Rank, 
+                                                    Converter={StaticResource IsStringNotNullOrEmptyConverter}, 
+                                                    ConverterParameter={x:Static sys:Boolean.TrueString}}">
+                                                <Ellipse BackgroundColor="Green">
+
+                                                </Ellipse>
+                                                <Label 
+                                                    Text="{Binding Rank}"
+                                                    HorizontalOptions="Center"
+                                                    FontFamily="OpenSansSemibold"
+                                                    TextColor="White">
+                                                </Label>
+                                            </Grid>
+
                                             <Label
                                                 Text="D"
                                                 IsVisible="{Binding PangramData.IsDaily}"

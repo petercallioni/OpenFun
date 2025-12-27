@@ -32,8 +32,8 @@
 		<MauiImage Include="Resources\Images\file_import.svg" BaseSize="60,60" />
 		<MauiImage Include="Resources\Images\game_pangram_icon.svg" />
 		<MauiImage Include="Resources\Images\garbage_can.svg" BaseSize="60,60" />
-		<MauiImage Include="Resources\Images\crown.svg" BaseSize="60,60" TintColor="#FFA500"/>
-		<MauiImage Include="Resources\Images\search.svg" BaseSize="60,60" TintColor="#FFFFFF"/>
+		<MauiImage Include="Resources\Images\crown.svg" BaseSize="60,60" TintColor="#FFA500" />
+		<MauiImage Include="Resources\Images\search.svg" BaseSize="60,60" TintColor="#FFFFFF" />
 	</ItemGroup>
 
 	<ItemGroup>
