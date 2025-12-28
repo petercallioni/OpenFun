@@ -426,7 +426,8 @@
                                         </Grid.ColumnDefinitions>
 
                                         <HorizontalStackLayout
-                                            Grid.Column="0">
+                                            Grid.Column="0"
+                                            HeightRequest="30">
 
                                             <Image
                                                 Source="crown.png"
@@ -505,6 +506,7 @@
                                                 WidthRequest="20"
                                                 IsVisible="{Binding IsVisible}"/>
                                     </Grid>
+                                                                        
                                     <VerticalStackLayout>
                                         <Label
                                             HorizontalOptions="Center"
@@ -599,6 +601,12 @@
                                             </Border>
                                         </HorizontalStackLayout>
                                     </VerticalStackLayout>
+
+                                    <Rectangle 
+                                        Background="Black" 
+                                        HeightRequest="3"
+                                        WidthRequest="300"/>
+                                    
                                 </VerticalStackLayout>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
