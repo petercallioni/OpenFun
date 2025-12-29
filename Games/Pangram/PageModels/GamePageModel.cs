@@ -532,7 +532,7 @@ namespace Pangram.PageModels
 
             for (int i = 0; i < wordsToCheck.Count; i++)
             {
-                var result = await gameModel.GuessWord(wordsToCheck[i]);
+                var result = await gameModel!.GuessWord(wordsToCheck[i]);
 
                 if (i == 0)
                 {
