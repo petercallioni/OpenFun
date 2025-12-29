@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text;
+using System.Collections.Specialized;
 
 namespace Pangram.PageModels
 {
@@ -16,9 +17,9 @@ namespace Pangram.PageModels
     {
         private readonly ModalErrorHandler errorHandler;
         private readonly GameModel gameModel;
-        private readonly ObservableCollection<string> guessedWords = new ObservableCollection<string>();
         private readonly DatabaseService databaseService;
         private readonly DialogService dialogService;
+        private ObservableCollection<string> guessedWords = new ObservableCollection<string>();
 
         // Reusable HttpClient for lookups
         private static readonly HttpClient httpClient = new HttpClient();
@@ -138,7 +139,17 @@ namespace Pangram.PageModels
             }
         }
 
-        public ObservableCollection<string> GuessedWords => guessedWords;
+        public ObservableCollection<string> GuessedWords
+        {
+            get => guessedWords; set
+            {
+                if (guessedWords != value)
+                {
+                    guessedWords = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
 
         // Components
@@ -194,6 +205,21 @@ namespace Pangram.PageModels
             ShowAutoAddSuffixes = false;
             EnableAutoAddSuffixes = false;
             canRevealWord = false;
+        }
+
+        private void SetGuessedWordList(IEnumerable<string>? strings)
+        {
+            if (strings != null)
+            {
+                GuessedWords = new ObservableCollection<string>(strings
+                    .OrderBy(w => w)
+                    .Select(w => w.ToUpper())
+                );
+            }
+            else
+            {
+                GuessedWords.Clear();
+            }
         }
 
         [RelayCommand]
@@ -344,8 +370,7 @@ namespace Pangram.PageModels
 
                 LastGuessResult = GuessWordResults.NONE;
 
-                GuessedWords.Clear();
-                gameModel.GuessedWords?.ForEach(word => GuessedWords.Add(word.ToUpper()));
+                SetGuessedWordList(gameModel.GuessedWords);
 
                 Sidebar.Update(gameModel);
 
@@ -517,9 +542,7 @@ namespace Pangram.PageModels
 
                 if (result == GuessWordResults.VALID || result == GuessWordResults.VALID_PANGRAM)
                 {
-                    gameModel?.GuessedWords?.Where(word => !GuessedWords.Contains(word.ToUpper()))
-                                          .ToList()
-                                          .ForEach(word => GuessedWords.Add(word.ToUpper()));
+                    SetGuessedWordList(gameModel.GuessedWords);
 
                     CurrentWord = string.Empty;
 
@@ -528,7 +551,7 @@ namespace Pangram.PageModels
                         FoundPangramWord = gameModel.FoundPangramWord.ToUpper();
                     }
 
-                    Sidebar.Update(gameModel);
+                    Sidebar.Update(gameModel!);
                 }
                 else if (i == 0)
                 {
