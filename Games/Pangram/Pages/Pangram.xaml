@@ -319,7 +319,16 @@
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <VerticalStackLayout>
-                                    <Grid>
+                                    <Grid
+                                        IsEnabled="{Binding IsEnabled}">
+                                        <Grid.Triggers>
+                                            <DataTrigger
+                                                TargetType="Grid"
+                                                Binding="{Binding Path=IsEnabled}"
+                                                Value="{x:Static sys:Boolean.FalseString}">
+                                                <Setter Property="Background" Value="Grey"/>
+                                            </DataTrigger>
+                                        </Grid.Triggers>
                                         <Grid.GestureRecognizers>
                                             <TapGestureRecognizer 
                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.LookupWordCommand}"
@@ -344,32 +353,10 @@
                                                     WidthRequest="20"
                                                     HeightRequest="20">
                                             </Image>
-                                            <Border.Style>
-                                                <Style TargetType="Border">
-                                                    <Setter Property="VisualStateManager.VisualStateGroups">
-                                                        <VisualStateGroupList>
-                                                            <VisualStateGroup x:Name="CommonStates">
-                                                                <VisualState x:Name="Normal" />
-                                                                <VisualState x:Name="PointerOver">
-                                                                    <VisualState.Setters>
-                                                                        <Setter Property="Background" Value="#005C62" />
-                                                                    </VisualState.Setters>
-                                                                </VisualState>
-                                                                <VisualState x:Name="Pressed">
-                                                                    <VisualState.Setters>
-                                                                        <Setter Property="Background" Value="#0047EF" />
-                                                                        <Setter Property="Scale" Value="0.98" />
-                                                                    </VisualState.Setters>
-                                                                </VisualState>
-                                                            </VisualStateGroup>
-                                                        </VisualStateGroupList>
-                                                    </Setter>
-                                                </Style>
-                                            </Border.Style>
                                         </Border>
 
                                         <Label 
-                                            Text="{Binding .}" 
+                                            Text="{Binding Word}" 
                                             FontSize="15" 
                                             Grid.Column="1"
                                             TextColor="White" 
@@ -506,7 +493,7 @@
                                                 WidthRequest="20"
                                                 IsVisible="{Binding IsVisible}"/>
                                     </Grid>
-                                                                        
+
                                     <VerticalStackLayout>
                                         <Label
                                             HorizontalOptions="Center"
@@ -606,7 +593,7 @@
                                         Background="Black" 
                                         HeightRequest="3"
                                         WidthRequest="300"/>
-                                    
+
                                 </VerticalStackLayout>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>

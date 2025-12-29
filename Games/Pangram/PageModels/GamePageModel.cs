@@ -19,7 +19,7 @@ namespace Pangram.PageModels
         private readonly GameModel gameModel;
         private readonly DatabaseService databaseService;
         private readonly DialogService dialogService;
-        private ObservableCollection<string> guessedWords = new ObservableCollection<string>();
+        private ObservableCollection<WordListItem> guessedWords = new ObservableCollection<WordListItem>();
 
         // Reusable HttpClient for lookups
         private static readonly HttpClient httpClient = new HttpClient();
@@ -139,7 +139,7 @@ namespace Pangram.PageModels
             }
         }
 
-        public ObservableCollection<string> GuessedWords
+        public ObservableCollection<WordListItem> GuessedWords
         {
             get => guessedWords; set
             {
@@ -211,9 +211,9 @@ namespace Pangram.PageModels
         {
             if (strings != null)
             {
-                GuessedWords = new ObservableCollection<string>(strings
+                GuessedWords = new ObservableCollection<WordListItem>(strings
                     .OrderBy(w => w)
-                    .Select(w => w.ToUpper())
+                    .Select(w => new WordListItem(w))
                 );
             }
             else
@@ -490,7 +490,7 @@ namespace Pangram.PageModels
         {
             CurrentWord += letter;
 
-            if (GuessedWords.Contains(currentWord))
+            if (GuessedWords.Select(w => w.Word).Contains(currentWord))
             {
                 LastGuessResult = GuessWordResults.ALREADY_GUESSED;
             }
@@ -655,9 +655,10 @@ namespace Pangram.PageModels
         }
 
         [RelayCommand]
-        private async Task LookupWord(string word)
+        private async Task LookupWord(WordListItem wordListItem)
         {
-            if (string.IsNullOrWhiteSpace(word))
+
+            if (string.IsNullOrWhiteSpace(wordListItem.Word))
             {
                 await dialogService.DisplayAlertAsync("Lookup", "No word provided to lookup.");
                 return;
@@ -665,14 +666,16 @@ namespace Pangram.PageModels
 
             try
             {
-                string query = Uri.EscapeDataString(word.Trim());
+                wordListItem.IsEnabled = false;
+
+                string query = Uri.EscapeDataString(wordListItem.Word.Trim());
                 string url = $"https://api.dictionaryapi.dev/api/v2/entries/en/{query}";
 
                 using var resp = await httpClient.GetAsync(url);
 
                 if (!resp.IsSuccessStatusCode)
                 {
-                    await dialogService.DisplayAlertAsync("Lookup", $"No definition found for '{word}'.");
+                    await dialogService.DisplayAlertAsync("Lookup", $"No definition found for '{wordListItem.Word}'.");
                     return;
                 }
 
@@ -682,7 +685,7 @@ namespace Pangram.PageModels
                 var root = doc.RootElement;
                 if (root.ValueKind != JsonValueKind.Array || root.GetArrayLength() == 0)
                 {
-                    await dialogService.DisplayAlertAsync("Lookup", $"No definition found for '{word}'.");
+                    await dialogService.DisplayAlertAsync("Lookup", $"No definition found for '{wordListItem.Word}'.");
                     return;
                 }
 
@@ -745,13 +748,17 @@ namespace Pangram.PageModels
                     message = message.Substring(0, maxLength) + "\n... (truncated)";
                 }
 
-                await dialogService.DisplayAlertAsync($"Lookup: {word}", message);
+                await dialogService.DisplayAlertAsync($"Lookup: {wordListItem.Word}", message);
             }
             catch (Exception ex)
             {
                 // Report error via the app's error handler and also show a simple message
                 errorHandler.HandleError(ex);
                 await dialogService.DisplayAlertAsync("Lookup Error", "An error occurred while looking up the word.");
+            }
+            finally
+            {
+                wordListItem.IsEnabled = true;
             }
         }
     }
