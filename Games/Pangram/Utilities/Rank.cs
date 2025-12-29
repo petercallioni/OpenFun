@@ -20,7 +20,7 @@ namespace Pangram.Utilities
 
             rankText = percentage switch
             {
-                >= 90 => "S",
+                >= 90 => "S+",
                 >= 80 => "S",
                 >= 70 => "A",
                 >= 60 => "B",
