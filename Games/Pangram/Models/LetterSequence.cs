@@ -84,7 +84,8 @@ namespace Pangram.Models
                 // from the letters in validSequence.
                 string? validWord = words
                     .AsParallel()
-                    .FirstOrDefault(word => CanConstructWordFromLetters(word, validSequence));
+                    .FirstOrDefault(word => CanConstructWordFromLetters(word, validSequence)
+                                                  && dictionaryCache.CheckWord(word).Result);
 
                 if (validWord != null)
                 {
