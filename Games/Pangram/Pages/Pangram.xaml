@@ -9,8 +9,8 @@
             xmlns:gconverters="clr-namespace:OpenFun_Core.Converters;assembly=OpenFun_Core"
             xmlns:models="clr-namespace:Pangram.Models"
             mc:Ignorable="d"
-             BackgroundColor="#202020"
-             Title="Pangram">
+            BackgroundColor="#202020"
+            Title="Pangram">
 
     <ContentPage.Resources>
         <Style x:Key="HexButtonStyle" TargetType="Button">
@@ -716,23 +716,45 @@
 
             <HorizontalStackLayout HorizontalOptions="Center"
                                     Margin="0,0,0,20">
-                <Button
+                <Border
                     Margin="0,0,10,0"
-                    WidthRequest="100"
-                    HeightRequest="20"
-                    FontSize="15"
-                    VerticalOptions="Center"
-                    Text="Back"
-                    BackgroundColor="Red"
-                    TextColor="White"
-                    Style="{StaticResource PressableButtonStyle}"
-                    IsEnabled="{Binding Loading.HasLoaded}"
-                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveLetterCommand}">
-                </Button>
-
+                    Background="Transparent"
+                    Stroke="Transparent">
+                    <HorizontalStackLayout>
+                        <Button
+                            CornerRadius="0"
+                            WidthRequest="80"
+                            HeightRequest="20"
+                            FontSize="15"
+                            VerticalOptions="Center"
+                            Text="Back"
+                            BackgroundColor="Red"
+                            TextColor="White"
+                            Style="{StaticResource PressableButtonStyle}"
+                            IsEnabled="{Binding Loading.HasLoaded}"
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveLetterCommand}">
+                        </Button>
+                        <Button
+                            CornerRadius="0"
+                            Padding="0"
+                            MinimumWidthRequest="20"
+                            WidthRequest="40"
+                            HeightRequest="20"
+                            FontSize="15"
+                            VerticalOptions="Center"
+                            BackgroundColor="Maroon"
+                            Text="&lt;&lt;"
+                            TextColor="White"
+                            Style="{StaticResource PressableButtonStyle}"
+                            IsEnabled="{Binding Loading.HasLoaded}"
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveAllLettersCommand}">
+                        </Button>
+                </HorizontalStackLayout>
+            </Border>
+                
                 <Button
                     Margin="10,0,0,0"
-                    WidthRequest="100"
+                    WidthRequest="120"
                     HeightRequest="20"
                     VerticalOptions="Center"
                     FontSize="15"

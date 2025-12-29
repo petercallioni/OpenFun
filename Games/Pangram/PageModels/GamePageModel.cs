@@ -501,6 +501,13 @@ namespace Pangram.PageModels
         }
 
         [RelayCommand]
+        private void RemoveAllLetters()
+        {
+            CurrentWord = "";
+            LastGuessResult = GuessWordResults.NONE;
+        }
+
+        [RelayCommand]
         private void RemoveLetter()
         {
             if (CurrentWord.Length > 0)
