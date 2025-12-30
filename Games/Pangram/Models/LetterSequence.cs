@@ -28,6 +28,7 @@ namespace Pangram.Models
 
             words
                 .Where(word => IsValidWord(word, wordLetterSequence))
+                .Where(word => dictionaryCache.CheckWord(word).Result)
                 .ToList()
                 .ForEach(word => filteredWords.TryAdd(word, true));
 
