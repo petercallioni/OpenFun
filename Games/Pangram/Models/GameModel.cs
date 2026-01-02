@@ -122,6 +122,11 @@ namespace Pangram.Models
                 return GuessWordResults.ALREADY_GUESSED;
             }
 
+            if (word.Length < 3)
+            {
+                return GuessWordResults.NOT_LONG_ENOUGH;
+            }
+
             if (await dictionaryCache.CheckWord(word))
             {
                 score++;

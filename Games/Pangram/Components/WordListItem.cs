@@ -1,9 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pangram.Components
 {
@@ -11,11 +6,13 @@ namespace Pangram.Components
     {
         private string _word;
         private bool _enabled;
+        private bool _isPangram;
 
-        public WordListItem(string word)
+        public WordListItem(string word, bool isPangram)
         {
             _word = word.ToUpper();
             _enabled = true;
+            _isPangram = isPangram;
         }
 
         public string Word
@@ -43,5 +40,7 @@ namespace Pangram.Components
                 }
             }
         }
+
+        public bool IsPangram { get => _isPangram; }
     }
 }

@@ -28,7 +28,7 @@ namespace OpenFun_Core.Models
                 new Regex(@"[']")           // Forbidden characters
             };
 
-            if (word.Length < 2)
+            if (word.Length < 3)
             {
                 isValid = false;
             }

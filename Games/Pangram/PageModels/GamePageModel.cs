@@ -6,10 +6,8 @@ using OpenFun_Core.Services;
 using Pangram.Components;
 using Pangram.Models;
 using System.Collections.ObjectModel;
-using System.Net.Http;
-using System.Text.Json;
 using System.Text;
-using System.Collections.Specialized;
+using System.Text.Json;
 
 namespace Pangram.PageModels
 {
@@ -213,7 +211,7 @@ namespace Pangram.PageModels
             {
                 GuessedWords = new ObservableCollection<WordListItem>(strings
                     .OrderBy(w => w)
-                    .Select(w => new WordListItem(w))
+                    .Select(w => new WordListItem(w, gameModel.WordLetterSequence!.Letters.All(c => w.Contains(c))))
                 );
             }
             else
@@ -269,9 +267,9 @@ namespace Pangram.PageModels
 
             if (confirmed)
             {
-                var toDelete = History.PangramHistory.Where(x => x.PangramData.GotPangram).ToList();
+                List<PangramDataVM> toDelete = History.PangramHistory.Where(x => x.PangramData.GotPangram).ToList();
 
-                foreach (var game in toDelete)
+                foreach (PangramDataVM game in toDelete)
                 {
                     History.PangramHistory.Remove(game);
                     _ = databaseService.DeleteAsync<PangramData>(game.PangramData.Id);
@@ -291,7 +289,7 @@ namespace Pangram.PageModels
 
             if (confirmed)
             {
-                var game = History.PangramHistory
+                PangramDataVM? game = History.PangramHistory
                     .Where(item => item.PangramData.Date == gameModel.CreatedDate)
                     .ToList()
                     .FirstOrDefault();
@@ -539,7 +537,7 @@ namespace Pangram.PageModels
 
             for (int i = 0; i < wordsToCheck.Count; i++)
             {
-                var result = await gameModel!.GuessWord(wordsToCheck[i]);
+                GuessWordResults result = await gameModel!.GuessWord(wordsToCheck[i]);
 
                 if (i == 0)
                 {
@@ -678,7 +676,7 @@ namespace Pangram.PageModels
                 string query = Uri.EscapeDataString(wordListItem.Word.Trim());
                 string url = $"https://api.dictionaryapi.dev/api/v2/entries/en/{query}";
 
-                using var resp = await httpClient.GetAsync(url);
+                using HttpResponseMessage resp = await httpClient.GetAsync(url);
 
                 if (!resp.IsSuccessStatusCode)
                 {
@@ -686,51 +684,51 @@ namespace Pangram.PageModels
                     return;
                 }
 
-                await using var stream = await resp.Content.ReadAsStreamAsync();
-                using var doc = await JsonDocument.ParseAsync(stream);
+                await using Stream stream = await resp.Content.ReadAsStreamAsync();
+                using JsonDocument doc = await JsonDocument.ParseAsync(stream);
 
-                var root = doc.RootElement;
+                JsonElement root = doc.RootElement;
                 if (root.ValueKind != JsonValueKind.Array || root.GetArrayLength() == 0)
                 {
                     await dialogService.DisplayAlertAsync("Lookup", $"No definition found for '{wordListItem.Word}'.");
                     return;
                 }
 
-                var first = root[0];
-                var sb = new StringBuilder();
+                JsonElement first = root[0];
+                StringBuilder sb = new StringBuilder();
 
-                if (first.TryGetProperty("word", out var w) && w.ValueKind == JsonValueKind.String)
+                if (first.TryGetProperty("word", out JsonElement w) && w.ValueKind == JsonValueKind.String)
                 {
                     sb.AppendLine(w.GetString());
                 }
 
-                if (first.TryGetProperty("phonetic", out var phonetic) && phonetic.ValueKind == JsonValueKind.String)
+                if (first.TryGetProperty("phonetic", out JsonElement phonetic) && phonetic.ValueKind == JsonValueKind.String)
                 {
                     sb.AppendLine(phonetic.GetString());
                 }
 
-                if (first.TryGetProperty("meanings", out var meanings) && meanings.ValueKind == JsonValueKind.Array)
+                if (first.TryGetProperty("meanings", out JsonElement meanings) && meanings.ValueKind == JsonValueKind.Array)
                 {
                     int meaningIndex = 1;
-                    foreach (var m in meanings.EnumerateArray())
+                    foreach (JsonElement m in meanings.EnumerateArray())
                     {
-                        if (m.TryGetProperty("partOfSpeech", out var pos) && pos.ValueKind == JsonValueKind.String)
+                        if (m.TryGetProperty("partOfSpeech", out JsonElement pos) && pos.ValueKind == JsonValueKind.String)
                         {
                             sb.AppendLine($"{meaningIndex}. {pos.GetString()}");
                         }
 
-                        if (m.TryGetProperty("definitions", out var defs) && defs.ValueKind == JsonValueKind.Array)
+                        if (m.TryGetProperty("definitions", out JsonElement defs) && defs.ValueKind == JsonValueKind.Array)
                         {
                             int defIndex = 1;
-                            foreach (var d in defs.EnumerateArray())
+                            foreach (JsonElement d in defs.EnumerateArray())
                             {
-                                if (d.TryGetProperty("definition", out var defVal) && defVal.ValueKind == JsonValueKind.String)
+                                if (d.TryGetProperty("definition", out JsonElement defVal) && defVal.ValueKind == JsonValueKind.String)
                                 {
                                     sb.AppendLine($"   {defIndex}. {defVal.GetString()}");
                                     defIndex++;
                                 }
 
-                                if (d.TryGetProperty("example", out var ex) && ex.ValueKind == JsonValueKind.String)
+                                if (d.TryGetProperty("example", out JsonElement ex) && ex.ValueKind == JsonValueKind.String)
                                 {
                                     sb.AppendLine($"       Example: {ex.GetString()}");
                                 }
@@ -742,7 +740,7 @@ namespace Pangram.PageModels
                     }
                 }
 
-                var message = sb.ToString().Trim();
+                string message = sb.ToString().Trim();
                 if (string.IsNullOrWhiteSpace(message))
                 {
                     message = "No details available.";

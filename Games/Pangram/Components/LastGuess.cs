@@ -26,10 +26,11 @@ namespace Pangram.Components
         private string GetMessageForGuessResult(GuessWordResults result) =>
             result switch
             {
-                GuessWordResults.INVALID => "Word Not In Dictionary",
                 GuessWordResults.ALREADY_GUESSED => "Already Scored",
                 GuessWordResults.FORBIDDEN_CHARACTERS => "Contains Invalid Characters",
                 GuessWordResults.DOES_NOT_CONTAIN_MAIN_LETTER => "Must Contain Main Letter",
+                GuessWordResults.INVALID => "Word Not In Dictionary",
+                GuessWordResults.NOT_LONG_ENOUGH => "Word Must Be >= 3 Characters",
                 GuessWordResults.VALID => string.Empty,
                 GuessWordResults.VALID_PANGRAM => string.Empty,
                 GuessWordResults.NONE => string.Empty,
@@ -41,10 +42,11 @@ namespace Pangram.Components
             {
                 GuessWordResults.VALID => Colors.Lime,
                 GuessWordResults.VALID_PANGRAM => Colors.Gold,
-                GuessWordResults.INVALID => Colors.Tomato,
-                GuessWordResults.ALREADY_GUESSED => Colors.LightGray,
                 GuessWordResults.FORBIDDEN_CHARACTERS => Colors.Purple,
+                GuessWordResults.ALREADY_GUESSED => Colors.LightGray,
+                GuessWordResults.NOT_LONG_ENOUGH => Colors.Purple,
                 GuessWordResults.DOES_NOT_CONTAIN_MAIN_LETTER => Colors.Red,
+                GuessWordResults.INVALID => Colors.Tomato,
                 GuessWordResults.NONE => Colors.Orange,
                 _ => Colors.Transparent,
             };
