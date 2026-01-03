@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Pangram.Utilities
+﻿namespace Pangram.Utilities
 {
     public static class Rank
     {
@@ -20,14 +14,13 @@ namespace Pangram.Utilities
 
             rankText = percentage switch
             {
-                >= 90 => "S+",
-                >= 80 => "S",
-                >= 70 => "A",
-                >= 60 => "B",
-                >= 50 => "C",
-                >= 40 => "D",
-                >= 30 => "E",
-                >= 20 => "F",
+                >= 90 => "S",
+                >= 80 => "A",
+                >= 70 => "B",
+                >= 60 => "C",
+                >= 50 => "D",
+                >= 40 => "E",
+                >= 30 => "F",
                 _ => ""
             };
 
