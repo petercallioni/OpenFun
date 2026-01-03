@@ -539,9 +539,9 @@ namespace Pangram.PageModels
             {
                 GuessWordResults result = await gameModel!.GuessWord(wordsToCheck[i]);
 
-                if (i == 0)
+                if (i == 0 || GuessWordResults.VALID_PANGRAM == result)
                 {
-                    // Only display the result from the word the user entered
+                    // Display the error for the root word entered, or the pangram if it is one
                     LastGuessResult = result;
                 }
 
