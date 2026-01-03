@@ -529,10 +529,21 @@ namespace Pangram.PageModels
 
             if (EnableAutoAddSuffixes)
             {
+                Dictionary<string, int> addedSuffixes = new Dictionary<string, int>();
+
                 foreach (string suffix in AvailableAutoAddSuffixes)
                 {
-                    wordsToCheck.Add(currentWord + suffix);
+                    if (currentWord.ToLower().EndsWith('e') && suffix.StartsWith('e'))
+                    {
+                        addedSuffixes.TryAdd(suffix.Substring(1), 1);
+                    }
+
+                    addedSuffixes.TryAdd(suffix, 1);
                 }
+
+                addedSuffixes.Keys
+                    .ToList()
+                    .ForEach(suffix => wordsToCheck.Add(currentWord + suffix));
             }
 
             for (int i = 0; i < wordsToCheck.Count; i++)
