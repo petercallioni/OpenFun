@@ -92,6 +92,17 @@
             </Setter>
         </Style>
 
+        <Style x:Key="CharDirectionButtonStyle" TargetType="Button" BasedOn="{StaticResource PressableButtonStyle}">
+            <Setter Property="HeightRequest" Value="20"/>
+            <Setter Property="MinimumHeightRequest" Value="20"/>
+            <Setter Property="WidthRequest" Value="20"/>
+            <Setter Property="MinimumWidthRequest" Value="20"/>
+
+            <Setter Property="Padding" Value="0,0,0,0"/>
+            <Setter Property="Background" Value="Azure"/>
+            <Setter Property="TextColor" Value="Black" />
+        </Style>
+
         <ResourceDictionary>
             <gconverters:InvertedBoolConverter x:Key="InvertedBoolConverter" />
             <gconverters:DateTimeToStringConverter x:Key="DateTimeToStringConverter" />
@@ -133,8 +144,7 @@
                     Grid.Column="0"
                     IsVisible="{Binding FoundPangramWord,
                                 Converter={StaticResource IsStringNotNullOrEmptyConverter}, 
-                                ConverterParameter={x:Static sys:Boolean.TrueString}
-                     }">
+                                ConverterParameter={x:Static sys:Boolean.TrueString}}">
                     <HorizontalStackLayout>
                         <Image Source="crown.png"
                              Aspect="Fill"
@@ -220,12 +230,60 @@
                 </Label>
             </Border>
 
-            <Label
+            <Grid
+                Margin="0,5,0,10">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Button
+                    Grid.Column="0"
+                    Style="{StaticResource CharDirectionButtonStyle}"
+                    Text="&gt;"
+                    Command="{Binding SetAddCharFromLeftCommand}"
+                    CommandParameter="{x:Boolean True}"
+                    >
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                         Binding="{Binding Path=AddCharFromLeft}"
+                                         Value="{x:Boolean True}">
+                            <Setter Property="TextColor" Value="White"/>
+                            <Setter Property="Background" Value="Chocolate"/>
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+
+                <Label
                     Text="{Binding LastGuess.Message}"
                     TextColor="{Binding LastGuess.Colour}"
                     FontSize="15"
                     HorizontalOptions="Center"
-                    Margin="0,5,0,10"/>
+                    VerticalOptions="Center"
+                    Grid.Column="1"
+                    />
+
+                <Button
+                    Grid.Column="2"
+                    Style="{StaticResource CharDirectionButtonStyle}"
+                    Text = "&lt;"
+                    Command="{Binding SetAddCharFromLeftCommand}"
+                    CommandParameter="{x:Boolean False}"
+                    >
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                         Binding="{Binding Path=AddCharFromLeft}"
+                                         Value="{x:Boolean False}">
+
+                            <Setter Property="TextColor" Value="White"/>
+                            <Setter Property="Background" Value="Chocolate"/>
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+
+            </Grid>
 
             <Grid
                   HorizontalOptions="Center">

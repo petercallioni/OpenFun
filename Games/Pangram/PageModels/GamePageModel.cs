@@ -36,6 +36,21 @@ namespace Pangram.PageModels
         private char primeCharacter;
         private String currentWord;
         private bool showAutoAddSuffixes;
+        private bool addCharFromLeft;
+
+        public bool AddCharFromLeft
+        {
+            get => addCharFromLeft;
+            set
+            {
+                if (addCharFromLeft != value)
+                {
+                    addCharFromLeft = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public bool ShowAutoAddSuffixes
         {
             get => showAutoAddSuffixes;
@@ -203,6 +218,7 @@ namespace Pangram.PageModels
             ShowAutoAddSuffixes = false;
             EnableAutoAddSuffixes = false;
             canRevealWord = false;
+            AddCharFromLeft = false;
         }
 
         private void SetGuessedWordList(IEnumerable<string>? strings)
@@ -218,6 +234,12 @@ namespace Pangram.PageModels
             {
                 GuessedWords.Clear();
             }
+        }
+
+        [RelayCommand]
+        private void SetAddCharFromLeft(bool addFromLeft)
+        {
+            AddCharFromLeft = addFromLeft;
         }
 
         [RelayCommand]
@@ -486,7 +508,14 @@ namespace Pangram.PageModels
         [RelayCommand]
         private void AddLetter(char letter)
         {
-            CurrentWord += letter;
+            if (AddCharFromLeft)
+            {
+                CurrentWord = letter + CurrentWord;
+            }
+            else
+            {
+                CurrentWord += letter;
+            }
 
             if (GuessedWords.Select(w => w.Word).Contains(currentWord))
             {
@@ -510,7 +539,14 @@ namespace Pangram.PageModels
         {
             if (CurrentWord.Length > 0)
             {
-                CurrentWord = CurrentWord.Remove(CurrentWord.Length - 1, 1);
+                if (AddCharFromLeft)
+                {
+                    CurrentWord = CurrentWord.Substring(1);
+                }
+                else
+                {
+                    CurrentWord = CurrentWord.Remove(CurrentWord.Length - 1, 1);
+                }
             }
 
             LastGuessResult = GuessWordResults.NONE;
